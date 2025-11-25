@@ -3,7 +3,7 @@ import fbIcon from "../../assets/icons/fb_icon.png";
 import ggIcon from "../../assets/icons/gg_icon.webp";
 export default function LoginDraft() {
   return (
-    <div className="flex items-center justify-center bg-gray-200 w-full min-h-full">
+    <div className="flex items-center justify-center bg-primary w-full min-h-full">
       {/* form */}
       <div className="bg-white h-150 w-120 my-23 flex-col justify-center font-roboto px-10 py-13 shadow-md">
         {/* title */}

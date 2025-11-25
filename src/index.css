@@ -6,10 +6,12 @@ body,
   height: 100%;
   margin: 0;
 }
+
 @theme {
   --font-roboto: "Roboto", sans-serif;
 
-  --color-primary: #16a34a;
+  --color-primary: #4caf50;
+  --color-secondary: #4a5565;
 }
 @layer base {
   body {
