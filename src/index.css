@@ -11,8 +11,8 @@ body,
 
   --color-primary: #16a34a;
 }
-/* @layer base {
+@layer base {
   body {
     font-family: "Roboto", sans-serif;
   }
-} */
+}

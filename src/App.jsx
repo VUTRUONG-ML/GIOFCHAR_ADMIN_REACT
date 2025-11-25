@@ -5,7 +5,7 @@ import LoginDraft from "./screens/login/LoginDraft";
 function App() {
   return (
     <>
-      <LoginDraft />
+      <AdminDraft />
     </>
   );
 }
