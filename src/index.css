@@ -12,6 +12,7 @@ body,
 
   --color-primary: #4caf50;
   --color-secondary: #4a5565;
+  --color-accent: "#d1d5dc";
 }
 @layer base {
   body {
