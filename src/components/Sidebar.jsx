@@ -16,7 +16,7 @@ export default function Sidebar() {
        rounded-xl
       "
     >
-      <div className=" h-16 flex">
+      <div className=" h-16 flex pt-2 mb-3">
         <div className="h-[50px] w-[50px] bg-primary flex items-center justify-center mr-1.5 rounded-xl">
           <Inventory2Icon sx={{ color: "white" }} />
         </div>
@@ -27,7 +27,7 @@ export default function Sidebar() {
           </p>
         </div>
       </div>
-      <div className=" flex-1 flex flex-col gap-2 border-t border-gray-300 pt-3 mt-4">
+      <div className=" flex-1 flex flex-col gap-2 border-t border-gray-300 pt-7 mt-4">
         <Menu title="Tổng quan" icon={DashboardOutlinedIcon} to="/admin/" />
         <Menu title="Sản phẩm" icon={FoodBankOutlinedIcon} to="products" />
         <Menu title="Đơn hàng" icon={ShoppingCartOutlinedIcon} to="orders" />

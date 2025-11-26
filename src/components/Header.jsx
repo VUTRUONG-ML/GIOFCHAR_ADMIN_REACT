@@ -1,12 +1,12 @@
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import profile from "../assets/profile.jpg";
-export default function Header() {
+export default function Header({ title }) {
   return (
     <div className="h-18 bg-white shadow p-4 flex items-center justify-between fixed top-4 right-3 left-70 rounded-xl">
       {/* left-section */}
       <div className="flex flex-col flex-1">
-        <p className="text-xl font-bold m-0 p-0">Tổng quan</p>
+        <p className="text-xl font-bold m-0 p-0">{title}</p>
         <p className="text-[12px] text-gray-600 p-0 m-0">
           Chào mừng trở lại, Admin
         </p>

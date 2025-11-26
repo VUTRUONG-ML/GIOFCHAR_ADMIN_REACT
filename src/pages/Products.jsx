@@ -1,27 +1,14 @@
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import productPicture from "../assets/product-template.jpg";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { SubTitle } from "../components/SubTitle";
 export default function Products() {
   return (
     <>
-      {/* title */}
-      <div className=" flex items-center justify-between h-20">
-        {/* left-section */}
-        <div>
-          <p className="text-xl font-bold">Quản lý sản phẩm</p>
-          <p className="text-[13px] text-secondary">
-            Tổng sản phẩm: 4 sản phẩm
-          </p>
-        </div>
-        {/* r-section */}
-        <button className="flex bg-primary text-white text-sm items-center px-4 py-2 rounded-md cursor-pointer active:scale-98">
-          <AddOutlinedIcon className="mr-2" />
-          <p>Thêm sản phẩm</p>
-        </button>
-      </div>
+      {/*subTitle */}
+      <SubTitle active handle={() => {}} title="Quản lý sản phẩm" />
       {/* data */}
       <div className="flex-1 bg-white shadow rounded-xl py-1 px-4">
         {/* categy */}
