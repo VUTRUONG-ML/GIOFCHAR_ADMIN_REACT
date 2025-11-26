@@ -5,14 +5,12 @@ import {
   RouterProvider,
 } from "react-router";
 import "./App.css";
-import AdminDraft from "./screens/AdminDraft";
-import LoginDraft from "./screens/login/LoginDraft";
 import AdminLayout from "./layouts/AdminLayout";
 import Products from "./pages/Products";
 import Dashboard from "./pages/Dashboard";
 import Orders from "./pages/Orders";
 import Users from "./pages/Users";
-import Categories from "./pages/Categories";
+import Categories from "./pages/Categories/Categories";
 import MyAccount from "./pages/MyAccount";
 
 const router = createBrowserRouter([

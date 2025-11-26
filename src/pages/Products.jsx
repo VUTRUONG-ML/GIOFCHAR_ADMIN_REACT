@@ -8,7 +8,12 @@ export default function Products() {
   return (
     <>
       {/*subTitle */}
-      <SubTitle active handle={() => {}} title="Quản lý sản phẩm" />
+      <SubTitle
+        active
+        nameActive="sản phẩm"
+        handle={() => {}}
+        title="Quản lý sản phẩm"
+      />
       {/* data */}
       <div className="flex-1 bg-white shadow rounded-xl py-1 px-4">
         {/* categy */}
