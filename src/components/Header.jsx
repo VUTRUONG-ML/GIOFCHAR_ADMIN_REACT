@@ -3,7 +3,7 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import profile from "../assets/profile.jpg";
 export default function Header({ title }) {
   return (
-    <div className="h-18 bg-white shadow p-4 flex items-center justify-between fixed top-4 right-8 left-70 rounded-xl">
+    <div className="h-22 bg-white shadow p-4 flex items-center justify-between fixed top-0 right-8 left-70 rounded-b-xl">
       {/* left-section */}
       <div className="flex flex-col flex-1">
         <p className="text-xl font-bold m-0 p-0">{title}</p>

@@ -6,15 +6,13 @@ export function Input({
   ...props
 }) {
   return (
-    <div
-      className=" border-solid border-b border-gray-300 mb-4 relative"
-      {...props}
-    >
+    <div className=" border-solid border-b border-gray-300 mb-4 relative">
       <input
         type={type}
         label={label}
         placeholder=""
         value={value}
+        {...props}
         className=" w-full pt-4 pb-2 text-lg 
          placeholder:text-[14px]
          focus:outline-none

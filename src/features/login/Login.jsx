@@ -2,10 +2,24 @@ import { Input } from "./Input";
 import fbIcon from "../../assets/icons/fb_icon.png";
 import ggIcon from "../../assets/icons/gg_icon.webp";
 import { useNavigate } from "react-router";
+import authApi from "../../api/authApi";
+import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
-  const handleLogin = () => {
-    navigate("/admin");
+  const { login } = useAuth();
+  const handleLogin = async () => {
+    try {
+      const response = await authApi.login({ email, password });
+      const { user, access_token } = response.data?.data;
+      login(user, access_token);
+      navigate("/admin");
+    } catch (error) {
+      //err
+    }
   };
   return (
     <div className="flex items-center justify-center bg-primary w-full min-h-full">
@@ -22,8 +36,18 @@ export default function Login() {
         </div>
         {/* input */}
         <div className=" flex flex-col">
-          <Input type="text" placeholder="Tên đăng nhập"></Input>
-          <Input type="password" placeholder="Mật khẩu"></Input>
+          <Input
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          ></Input>
+          <Input
+            type="password"
+            placeholder="Mật khẩu"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          ></Input>
         </div>
         {/* remember-forgot */}
         <div className=" flex justify-between my-5">
@@ -55,7 +79,6 @@ export default function Login() {
         <div className=" flex justify-center items-center ">
           <img
             src={fbIcon}
-            srcset=""
             className=" h-[42px] mr-2 object-cover cursor-pointer"
           />
           <img
