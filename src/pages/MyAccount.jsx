@@ -8,7 +8,11 @@ export default function MyAccount() {
   return (
     <>
       {/*subTitle */}
-      <SubTitle handle={() => {}} title="Thông tin tài khoản" />
+      <SubTitle
+        handle={() => {}}
+        title="Thông tin tài khoản"
+        miniTitle="Quản lý thông tin cá nhân và bảo mật"
+      />
       {/* data */}
       <div className="flex-1 flex  py-1 gap-4.5 h-full">
         {/* col1 */}

@@ -6,7 +6,11 @@ export default function Users() {
   return (
     <>
       {/*subTitle */}
-      <SubTitle handle={() => {}} title="Quản lý khách hàng" />
+      <SubTitle
+        handle={() => {}}
+        title="Quản lý khách hàng"
+        miniTitle="Tổng: 2 khách hàng"
+      />
       {/* data */}
       <div className="flex-1 bg-white shadow rounded-xl py-1 px-4">
         {/* table */}

@@ -1,12 +1,12 @@
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
-export function SubTitle({ active, nameActive, handle, title }) {
+export function SubTitle({ active, nameActive, handle, title, miniTitle }) {
   return (
     <div className=" flex items-center justify-between h-18">
       {/* left-section */}
       <div>
         <p className="text-xl font-bold">{title}</p>
-        <p className="text-[13px] text-secondary">Tổng sản phẩm: 4 sản phẩm</p>
+        <p className="text-[13px] text-secondary">{miniTitle || "Quản lý"}</p>
       </div>
       {/* r-section */}
       {active && (

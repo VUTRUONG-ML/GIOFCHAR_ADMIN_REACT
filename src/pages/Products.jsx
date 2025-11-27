@@ -13,6 +13,7 @@ export default function Products() {
         nameActive="sản phẩm"
         handle={() => {}}
         title="Quản lý sản phẩm"
+        miniTitle="Tổng: 2 sản phẩm"
       />
       {/* data */}
       <div className="flex-1 bg-white shadow rounded-xl py-1 px-4">

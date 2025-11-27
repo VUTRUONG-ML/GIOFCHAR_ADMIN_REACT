@@ -11,7 +11,11 @@ body,
   --font-roboto: "Roboto", sans-serif;
 
   --color-primary: #4caf50;
+  --color-primary-md: #66bb6a;
+  --color-primary-light: #a5d6a7;
   --color-secondary: #4a5565;
+  --color-secondary-orange: #ffb74d;
+  --color-secondary-yellow: #fdd835;
   --color-accent: "#d1d5dc";
 }
 @layer base {

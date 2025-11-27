@@ -2,13 +2,17 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
-import { SubTitle } from "../components/SubTitle";
+import { SubTitle } from "../../components/SubTitle";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 export default function Orders() {
   return (
     <>
       {/*subTitle */}
-      <SubTitle handle={() => {}} title="Quản lý đơn hàng" />
+      <SubTitle
+        handle={() => {}}
+        title="Quản lý đơn hàng"
+        miniTitle="Tổng 2 đơn hàng"
+      />
       {/* data */}
       <div className="flex-1 bg-white shadow rounded-xl py-1 px-4">
         {/* categy */}

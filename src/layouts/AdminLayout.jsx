@@ -9,7 +9,7 @@ export default function AdminLayout() {
   return (
     <div className="flex min-h-screen bg-gray-100 pb-5">
       <Sidebar />
-      <div className="flex-1 flex flex-col ">
+      <div className="flex-1 flex flex-col pr-6">
         <Header title={title} />
         {/* Content */}
         <div className=" mt-24 ml-70 mr-3 flex flex-col min-h-[calc(94vh-80px)]">

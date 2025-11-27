@@ -8,12 +8,18 @@ import "./App.css";
 import AdminLayout from "./layouts/AdminLayout";
 import Products from "./pages/Products";
 import Dashboard from "./pages/Dashboard";
-import Orders from "./pages/Orders";
+import Orders from "./pages/orders/Orders";
 import Users from "./pages/Users";
 import Categories from "./pages/Categories/Categories";
 import MyAccount from "./pages/MyAccount";
+import Login from "./features/login/Login";
+import OrderDetail from "./pages/orders/OrderDetail";
 
 const router = createBrowserRouter([
+  {
+    path: "/auth",
+    Component: Login,
+  },
   {
     path: "/admin",
     Component: AdminLayout,
@@ -28,6 +34,11 @@ const router = createBrowserRouter([
         path: "orders",
         Component: Orders,
         handle: { title: "Quản lý đơn hàng" },
+      },
+      {
+        path: "orders/:orderId",
+        Component: OrderDetail,
+        handle: { title: "Chi tiết đơn hàng" },
       },
       {
         path: "users",

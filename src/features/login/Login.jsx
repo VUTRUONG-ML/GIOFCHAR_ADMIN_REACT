@@ -1,7 +1,12 @@
 import { Input } from "./Input";
 import fbIcon from "../../assets/icons/fb_icon.png";
 import ggIcon from "../../assets/icons/gg_icon.webp";
-export default function LoginDraft() {
+import { useNavigate } from "react-router";
+export default function Login() {
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    navigate("/admin");
+  };
   return (
     <div className="flex items-center justify-center bg-primary w-full min-h-full">
       {/* form */}
@@ -36,7 +41,10 @@ export default function LoginDraft() {
           </div>
         </div>
         <div className=" flex justify-center mt-3">
-          <button className=" bg-primary px-20 py-3 cursor-pointer text-white text-s rounded-full hover:bg-green-700 transition-all duration-200 ease-in-out active:scale-95">
+          <button
+            onClick={handleLogin}
+            className=" bg-primary px-20 py-3 cursor-pointer text-white text-s rounded-full hover:bg-green-700 transition-all duration-200 ease-in-out active:scale-95"
+          >
             Đăng nhập
           </button>
         </div>

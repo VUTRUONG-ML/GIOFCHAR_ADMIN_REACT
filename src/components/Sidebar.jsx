@@ -11,7 +11,7 @@ export default function Sidebar() {
   return (
     <div
       className="
-       w-64 bg-pink-100 shadow-md p-4 fixed top-0 bottom-0 left-0
+       w-64 bg-white shadow-md p-4 fixed top-0 bottom-0 left-0
        flex flex-col
        rounded-xl
       "
