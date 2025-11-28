@@ -83,7 +83,6 @@ export default function Login() {
           />
           <img
             src={ggIcon}
-            srcset=""
             className=" h-[50px] ml-2 object-cover cursor-pointer"
           />
         </div>
