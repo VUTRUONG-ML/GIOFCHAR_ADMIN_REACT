@@ -14,7 +14,7 @@ export default function Users() {
       {/* data */}
       <div className="flex-1 bg-white shadow rounded-xl py-1 px-4">
         {/* table */}
-        <div className="pt-6 mt-2 font-medium">
+        <div className="pt-6 mt-2 font-medium overflow-y-auto max-h-[calc(98vh-250px)]">
           <table className="w-full table-fixed">
             <thead className="text-left">
               <tr className="border-b border-gray-200">

@@ -3,8 +3,11 @@ const ordersApi = {
   getOrders() {
     return axiosClient.get("/orders");
   },
-  login(data) {
-    return axiosClient.post("/auth/login", data);
+  getOrderItems(orderId) {
+    return axiosClient.get(`/orders/${orderId}/detail`);
+  },
+  updateOrderStatus(orderId, statusData) {
+    return axiosClient.put(`/orders/${orderId}/status`, statusData);
   },
 };
 

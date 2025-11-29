@@ -12,7 +12,7 @@ export default function AdminLayout() {
       <div className="flex-1 flex flex-col pr-6">
         <Header title={title} />
         {/* Content */}
-        <div className=" mt-24 ml-70 mr-3 flex flex-col min-h-[calc(94vh-80px)]">
+        <div className=" mt-24 ml-70 mr-3 flex-1 flex flex-col overflow-hidden">
           <Outlet />
         </div>
       </div>

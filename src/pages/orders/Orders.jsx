@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import ordersApi from "../../api/ordersApi";
 import { OrderStatus } from "./OrderStatus";
+import { VND } from "../../constants/currency";
+import { formatMoney } from "../../utils/formatMoney";
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [quantity, setQuantity] = useState(0);
@@ -48,7 +50,7 @@ export default function Orders() {
         {!quantity ? (
           <div>Danh sách rỗng </div>
         ) : (
-          <div className="pt-3 mt-2 font-medium">
+          <div className="pt-3 mt-2 font-medium overflow-y-auto max-h-[calc(98vh-250px)]">
             <table className="w-full table-fixed">
               <thead className="text-left">
                 <tr className="border-b border-gray-200">
@@ -84,13 +86,13 @@ export default function Orders() {
                       <td>
                         <div className="flex bg-amber-100 text-[16px] justify-center py-2 rounded-2xl items-center w-[50%] gap-2">
                           <Inventory2OutlinedIcon />
-                          <p>3</p>
+                          <p>{order.totalQuantity}</p>
                         </div>
                       </td>
-                      <td>285.000 d</td>
+                      <td>{formatMoney(order.amount)}</td>
                       <td className="text-secondary text-[14px]">
                         {/* 2024-11-23 14:30 */}
-                        {new Date(order.time).toLocaleString("vi-VN")}
+                        {order.time}
                       </td>
                       <td>
                         <OrderStatus status={order.status} />

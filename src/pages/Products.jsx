@@ -28,7 +28,7 @@ export default function Products() {
           <div className="bg-gray-200 py-1 px-3 rounded-md">Khác</div>
         </div>
         {/* table */}
-        <div className="pt-3 mt-2 font-medium">
+        <div className="pt-3 mt-2 font-medium overflow-y-auto max-h-[calc(98vh-250px)]">
           <table className="w-full table-fixed">
             <thead className="text-left">
               <tr className="border-b border-gray-200">

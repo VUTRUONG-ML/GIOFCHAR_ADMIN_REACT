@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
     loadAccount();
   }, []);
 
-  const value = { user, login, logout, loading };
+  const value = { user, login, logout, loading, setLoading };
   return (
     <AuthContext.Provider value={value}> {children} </AuthContext.Provider>
   );
