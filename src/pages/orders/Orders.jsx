@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import ordersApi from "../../api/ordersApi";
 import { OrderStatus } from "./OrderStatus";
-import { VND } from "../../constants/currency";
+
 import { formatMoney } from "../../utils/formatMoney";
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -14,17 +14,21 @@ export default function Orders() {
     navigate(`/admin/orders/${orderId}`);
   };
   useEffect(() => {
+    const controller = new AbortController();
     const loadOrders = async () => {
       try {
-        const response = await ordersApi.getOrders();
+        const response = await ordersApi.getOrders(controller.signal);
         setOrders(response.data?.orders);
         setQuantity(response.data?.total);
-        console.log("check data", response.data);
       } catch (error) {
         // processed
+        if (error.name === "CanceledError") return;
       }
     };
     loadOrders();
+    return () => {
+      controller.abort();
+    };
   }, []);
   return (
     <>
@@ -91,7 +95,6 @@ export default function Orders() {
                       </td>
                       <td>{formatMoney(order.amount)}</td>
                       <td className="text-secondary text-[14px]">
-                        {/* 2024-11-23 14:30 */}
                         {order.time}
                       </td>
                       <td>
@@ -104,7 +107,6 @@ export default function Orders() {
             </table>
           </div>
         )}
-        {/* table */}
       </div>
     </>
   );

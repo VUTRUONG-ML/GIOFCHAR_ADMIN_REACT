@@ -1,10 +1,10 @@
 import axiosClient from "./axiosClient";
 const ordersApi = {
-  getOrders() {
-    return axiosClient.get("/orders");
+  getOrders(signal) {
+    return axiosClient.get("/orders", { signal });
   },
-  getOrderItems(orderId) {
-    return axiosClient.get(`/orders/${orderId}/detail`);
+  getOrderItems(orderId, signal) {
+    return axiosClient.get(`/orders/${orderId}/detail`, { signal });
   },
   updateOrderStatus(orderId, statusData) {
     return axiosClient.put(`/orders/${orderId}/status`, statusData);
