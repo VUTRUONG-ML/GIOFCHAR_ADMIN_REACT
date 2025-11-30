@@ -5,6 +5,7 @@ import DoDisturbOutlinedIcon from "@mui/icons-material/DoDisturbOutlined";
 import { useEffect, useState } from "react";
 import usersApi from "../../api/usersApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { toast } from "react-toastify";
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [quantityUser, setQuantityUser] = useState(0);
@@ -27,6 +28,24 @@ export default function Users() {
     loadUsersData();
     return () => controller.abort();
   }, []);
+
+  const updateActive = async (isActive, userId) => {
+    try {
+      await usersApi.updateActiveUser({ isActive }, userId);
+
+      // cập nhật ui
+      setUsers((prev) =>
+        prev.map((user) => {
+          return user.userId === userId
+            ? { ...user, isActiveAccount: isActive }
+            : user;
+        })
+      );
+      toast.success("Cập nhật tài khoản khách hàng thành công");
+    } catch (error) {
+      // processed
+    }
+  };
   return (
     <>
       {loading ? (
@@ -106,11 +125,21 @@ export default function Users() {
                           </td>
                           <td>
                             {user.isActiveAccount ? (
-                              <button className="bg-red-300 text-red-700 text-[14px] px-2 py-1 cursor-pointer rounded-md active:scale-95">
+                              <button
+                                className="bg-red-300 text-red-700 text-[14px] px-2 py-1 cursor-pointer rounded-md active:scale-95"
+                                onClick={() => {
+                                  updateActive(0, user.userId);
+                                }}
+                              >
                                 <p>Chặn</p>
                               </button>
                             ) : (
-                              <button className=" text-[14px] px-2 py-1 cursor-pointer rounded-md active:scale-95 bg-green-200 text-primary">
+                              <button
+                                className=" text-[14px] px-2 py-1 cursor-pointer rounded-md active:scale-95 bg-green-200 text-primary"
+                                onClick={() => {
+                                  updateActive(1, user.userId);
+                                }}
+                              >
                                 <p>Bỏ chặn</p>
                               </button>
                             )}

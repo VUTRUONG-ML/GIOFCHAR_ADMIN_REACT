@@ -1,13 +1,13 @@
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import productPicture from "../assets/product-template.jpg";
+import productPicture from "../../assets/product-template.jpg";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { SubTitle } from "../components/SubTitle";
+import { SubTitle } from "../../components/SubTitle";
 import { useEffect, useState } from "react";
-import foodsApi from "../api/foodsApi";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { formatMoney } from "../utils/formatMoney";
+import foodsApi from "../../api/foodsApi";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { formatMoney } from "../../utils/formatMoney";
 export default function Products() {
   const [foods, setFoods] = useState([]);
   const [quantity, setQuantity] = useState(0);
