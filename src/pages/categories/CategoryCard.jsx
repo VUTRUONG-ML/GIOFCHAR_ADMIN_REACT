@@ -1,7 +1,25 @@
 import FolderCopyOutlinedIcon from "@mui/icons-material/FolderCopyOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-export function CategoryCard({ category }) {
+import categoriesApi from "../../api/categoriesApi";
+import { toast } from "react-toastify";
+export function CategoryCard({ category, categories, setCategories }) {
+  const handleDelete = async (categoryId) => {
+    if (category.quantityFood) {
+      alert("Bạn không được xóa danh mục khi sản phẩm trong danh mục vẫn còn!");
+      return;
+    }
+    try {
+      await categoriesApi.deleteCategory(category.categoryID);
+      setCategories(
+        categories.filter((category) => category.categoryID !== categoryId)
+      );
+
+      toast.success("Xóa danh mục thành công");
+    } catch (error) {
+      return;
+    }
+  };
   return (
     <div className="bg-white shadow rounded-xl flex justify-between p-4 h-50">
       <div className="flex flex-col justify-around">
@@ -20,8 +38,11 @@ export function CategoryCard({ category }) {
         <button className=" active:scale-95">
           <EditOutlinedIcon className="text-blue-800 cursor-pointer" />
         </button>
-        <button className=" active:scale-95">
-          <DeleteForeverOutlinedIcon className="text-red-800 cursor-pointer" />
+        <button
+          className="cursor-pointer active:scale-95"
+          onClick={() => handleDelete(category.categoryID)}
+        >
+          <DeleteForeverOutlinedIcon className="text-red-800 " />
         </button>
       </div>
     </div>

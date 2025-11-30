@@ -47,7 +47,12 @@ export default function Categories() {
           <div className="flex-1 grid grid-cols-3 gap-5  py-1 px-4 overflow-y-auto max-h-[calc(98vh-180px)]">
             {categories.map((category) => {
               return (
-                <CategoryCard key={category.categoryID} category={category} />
+                <CategoryCard
+                  key={category.categoryID}
+                  category={category}
+                  setCategories={setCategories}
+                  categories={categories}
+                />
               );
             })}
           </div>
