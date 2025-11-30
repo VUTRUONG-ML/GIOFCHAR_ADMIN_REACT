@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import foodsApi from "../../api/foodsApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { formatMoney } from "../../utils/formatMoney";
+import { toast } from "react-toastify";
 export default function Products() {
   const [foods, setFoods] = useState([]);
   const [quantity, setQuantity] = useState(0);
@@ -31,6 +32,18 @@ export default function Products() {
 
     return () => controller.abort();
   }, []);
+
+  const handleDelete = async (foodId) => {
+    try {
+      await foodsApi.deleteFood(foodId);
+
+      setFoods(foods.filter((food) => food.foodId !== foodId));
+
+      toast.success("Xóa sản phẩm thành công");
+    } catch (error) {
+      return;
+    }
+  };
 
   return (
     <>
@@ -122,10 +135,12 @@ export default function Products() {
                             <td>
                               <div className="flex items-center gap-3">
                                 <button>
-                                  <EditOutlinedIcon className="text-blue-800 cursor-pointer" />
+                                  <EditOutlinedIcon className="text-blue-800 cursor-pointer active:scale-95" />
                                 </button>
-                                <button>
-                                  <DeleteForeverOutlinedIcon className="text-red-800 cursor-pointer" />
+                                <button
+                                  onClick={() => handleDelete(food.foodId)}
+                                >
+                                  <DeleteForeverOutlinedIcon className="text-red-800 cursor-pointer active:scale-95" />
                                 </button>
                               </div>
                             </td>
