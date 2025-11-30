@@ -3,7 +3,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import Products from "../pages/Products";
 import Dashboard from "../pages/Dashboard";
 import Orders from "../pages/orders/Orders";
-import Users from "../pages/Users";
+import Users from "../pages/users/Users";
 import Categories from "../pages/Categories/Categories";
 import MyAccount from "../pages/MyAccount";
 import Login from "../features/login/Login";
