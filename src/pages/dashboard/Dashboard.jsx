@@ -7,13 +7,14 @@ import { CartIcon, MoneyIcon, PeopleIcon, TrendingUpIcon } from "./IconStatus";
 import { VND } from "../../constants/currency";
 import RevenueChart from "./charts/RevenueChart";
 import { useState } from "react";
+import BestSellingChart from "./charts/BestSellingChart";
 export default function DashBoard() {
   const [range, setRange] = useState(7);
   return (
     <>
       <div className="flex flex-col h-full gap-4">
         {/* status overview */}
-        <div className="flex-1 flex gap-4">
+        <div className="flex-1 flex gap-4 mt-2">
           <StatusOverview
             icon={<CartIcon />}
             title={"Đơn hàng hôm nay"}
@@ -66,26 +67,29 @@ export default function DashBoard() {
           <div className="flex-1 bg-white rounded-xl shadow p-4 flex flex-col">
             <p className="text-2xl font-extrabold">Sản phẩm bán chạy</p>
             {/* Chart */}
-            <div className="flex-1 min-40">chart</div>
+            <BestSellingChart />
             {/* List best sell */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col ">
               <div className="flex justify-between">
-                <div className="flex">
-                  <div>color</div> <p>Giò lụa</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-primary"></div>{" "}
+                  <p>Giò lụa</p>
                 </div>
-                <p>35%</p>
+                <p className="text-md font-bold ">35%</p>
               </div>
               <div className="flex justify-between">
-                <div className="flex">
-                  <div>color</div> <p>Chả quế</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-secondary-orange"></div>{" "}
+                  <p>Chả quế</p>
                 </div>
-                <p>25%</p>
+                <p className="text-md font-bold ">25%</p>
               </div>
               <div className="flex justify-between">
-                <div className="flex">
-                  <div>color</div> <p>Nem chua</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-secondary-yellow"></div>{" "}
+                  <p>Nem chua</p>
                 </div>
-                <p>20%</p>
+                <p className="text-md font-bold ">20%</p>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import FoodBankOutlinedIcon from "@mui/icons-material/FoodBankOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
@@ -18,7 +18,7 @@ export default function Sidebar() {
     >
       <div className=" h-16 flex pt-2 mb-3">
         <div className="h-[50px] w-[50px] bg-primary flex items-center justify-center mr-1.5 rounded-xl">
-          <Inventory2Icon sx={{ color: "white" }} />
+          <Inventory2OutlinedIcon sx={{ color: "white" }} />
         </div>
         <div className=" flex-1 flex flex-col justify-center h-[50px]">
           <p className=" text-lg font-bold text-black">Giò Chả</p>
