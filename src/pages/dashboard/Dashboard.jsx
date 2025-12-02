@@ -43,7 +43,7 @@ export default function DashBoard() {
         </div>
         <div className="flex-2 flex gap-4">
           {/* revenue with week */}
-          <div className="flex-3 flex flex-col bg-white rounded-xl shadow p-4 gap-2">
+          <div className="flex-2 flex flex-col bg-white rounded-xl shadow p-4 gap-2 min-h-80 min-w-120">
             <div className="flex items-center justify-between">
               <p className="text-xl font-bold">Doanh thu</p>
               <select
@@ -62,8 +62,32 @@ export default function DashBoard() {
             {/* ngày code ui 2/12/2025 */}
             <RevenueChart range={range} />
           </div>
-          <div className="flex-2 bg-white rounded-xl shadow">
-            Sản phẩm bán chạy
+          {/* BestSelling */}
+          <div className="flex-1 bg-white rounded-xl shadow p-4 flex flex-col">
+            <p className="text-2xl font-extrabold">Sản phẩm bán chạy</p>
+            {/* Chart */}
+            <div className="flex-1 min-40">chart</div>
+            {/* List best sell */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between">
+                <div className="flex">
+                  <div>color</div> <p>Giò lụa</p>
+                </div>
+                <p>35%</p>
+              </div>
+              <div className="flex justify-between">
+                <div className="flex">
+                  <div>color</div> <p>Chả quế</p>
+                </div>
+                <p>25%</p>
+              </div>
+              <div className="flex justify-between">
+                <div className="flex">
+                  <div>color</div> <p>Nem chua</p>
+                </div>
+                <p>20%</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

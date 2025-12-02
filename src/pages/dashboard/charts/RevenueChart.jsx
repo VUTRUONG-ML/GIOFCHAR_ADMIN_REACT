@@ -52,8 +52,8 @@ const data90Days = [
   { name: "month2", uv: 90000000 },
   { name: "month3", uv: 90000000 },
 ];
-function getTooltipIntro(name, range) {
-  if (range === 7) {
+function getTooltipValue(name, range) {
+  if (range == 7) {
     const map = {
       T2: "30/11/2025",
       T3: "01/12/2025",
@@ -64,15 +64,15 @@ function getTooltipIntro(name, range) {
       CN: "29/11/2025",
     };
     return map[name] || "";
-  } else if (range === 30) {
+  } else if (range == 30) {
     const map = {
-      week1: "03/11 - 09/11",
-      week2: "10/11 - 16/11",
-      week3: "17/11 - 23/11",
-      week4: "24/11 - 30/11",
+      week1: "03/11/25 - 09/11/25",
+      week2: "10/11/25 - 16/11/25",
+      week3: "17/11/25 - 23/11/25",
+      week4: "24/11/25 - 30/11/25",
     };
     return map[name] || "";
-  } else if (range === 90) {
+  } else if (range == 90) {
     const map = {
       month1: "09/2025",
       month2: "10/2025",
@@ -83,7 +83,7 @@ function getTooltipIntro(name, range) {
   return "";
 }
 function getLabel(name, range) {
-  if (range === 7) {
+  if (range == 7) {
     const map = {
       T2: "Thứ 2",
       T3: "Thứ 3",
@@ -94,7 +94,7 @@ function getLabel(name, range) {
       CN: "Chủ nhật",
     };
     return map[name] || name;
-  } else if (range === 30) {
+  } else if (range == 30) {
     const map = {
       week1: "Tuần 1",
       week2: "Tuần 2",
@@ -102,8 +102,8 @@ function getLabel(name, range) {
       week4: "Tuần 4",
     };
     return map[name] || name;
-  } else if (range === 90) {
-    const map = { month1: "Tháng 1", month2: "Tháng 2", month3: "Tháng 3" };
+  } else if (range == 90) {
+    const map = { month1: "Tháng 9", month2: "Tháng 10", month3: "Tháng 11" };
     return map[name] || name;
   }
   return name;
@@ -120,11 +120,7 @@ function RoundedBar(props) {
   return <path d={getPath(x, y, width, height)} fill={fill} stroke="none" />;
 }
 
-function CustomTooltip(props) {
-  console.log("check payload", props);
-  const active = props.active;
-  const payload = props.payload;
-
+function CustomTooltip({ payload, label, active, range }) {
   if (active && payload && payload.length) {
     return (
       <div
@@ -138,10 +134,10 @@ function CustomTooltip(props) {
         }}
       >
         <p className="label" style={{ margin: "0", fontWeight: "700" }}>
-          {payload[0].payload.name}
+          {getLabel(label, range)}
         </p>
         <p className="intro" style={{ margin: "0" }}>
-          {getLabel(payload[0].payload.name, 7)}
+          {getTooltipValue(label, range)}
         </p>
         <p
           className="desc"
@@ -162,16 +158,12 @@ function CustomTooltip(props) {
 
 export default function RevenueChart({ range }) {
   return (
-    <div
-      className="flex-1 w-full h-full font-bold text-md text-secondary"
-      key={range}
-    >
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="flex-1 w-full h-full font-bold text-md text-secondary">
+      <ResponsiveContainer width="100%" height="100%" aspect={undefined}>
         <BarChart
-          data={
-            range === 7 ? data7Days : range === 30 ? data30Days : data90Days
-          }
+          data={range == 7 ? data7Days : range == 30 ? data30Days : data90Days}
           margin={margin}
+          key={range}
         >
           <XAxis
             dataKey="name"
@@ -179,12 +171,12 @@ export default function RevenueChart({ range }) {
             axisLine={false}
             tickLine={false}
           />
-          <Tooltip
-            content={(props) => (
-              <CustomTooltip {...props} range={range} active />
-            )}
+          <Tooltip content={<CustomTooltip range={range} />} />
+          <Bar
+            dataKey="uv"
+            fill="#4caf50"
+            shape={<RoundedBar range={range} />}
           />
-          <Bar dataKey="uv" fill="#4caf50" shape={<RoundedBar />} />
         </BarChart>
       </ResponsiveContainer>
     </div>
