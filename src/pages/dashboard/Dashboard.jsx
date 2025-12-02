@@ -61,13 +61,17 @@ export default function DashBoard() {
             </div>
             {/* chart */}
             {/* ngày code ui 2/12/2025 */}
-            <RevenueChart range={range} />
+            <div className="flex-1 w-full h-full font-bold text-md text-secondary">
+              <RevenueChart range={range} />
+            </div>
           </div>
           {/* BestSelling */}
           <div className="flex-1 bg-white rounded-xl shadow p-4 flex flex-col">
             <p className="text-2xl font-extrabold">Sản phẩm bán chạy</p>
             {/* Chart */}
-            <BestSellingChart />
+            <div className="flex-1 min-h-20 min-w-20 flex justify-center items-center relative">
+              <BestSellingChart />
+            </div>
             {/* List best sell */}
             <div className="flex flex-col ">
               <div className="flex justify-between">

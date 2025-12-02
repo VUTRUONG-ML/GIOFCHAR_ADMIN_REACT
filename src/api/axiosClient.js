@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Navigate, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 const defaultOptions = {
@@ -27,6 +28,7 @@ axiosClient.interceptors.response.use(
     if (!error.response) {
       throw error;
     }
+    const navigate = useNavigate();
 
     const status = error.response.status;
     const message = error.response.data?.message || "Đã có lỗi xảy ra";
@@ -37,6 +39,7 @@ axiosClient.interceptors.response.use(
         break;
       case 401:
         console.warn("Unauthorized", message);
+        navigate("/auth");
         break;
       case 403:
         console.warn("Forbidden", message);

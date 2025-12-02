@@ -12,38 +12,38 @@ const data = [
 const RADIAN = Math.PI / 180;
 const COLORS = ["#4caf50", "#ffb74d", "#fdd835", "#4a5565"];
 
-// Custom label function
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}) => {
-  if (cx == null || cy == null || innerRadius == null || outerRadius == null) {
-    return null;
-  }
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+// // Custom label function
+// const renderCustomizedLabel = ({
+//   cx,
+//   cy,
+//   midAngle,
+//   innerRadius,
+//   outerRadius,
+//   percent,
+// }) => {
+//   if (cx == null || cy == null || innerRadius == null || outerRadius == null) {
+//     return null;
+//   }
+//   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+//   const x = cx + radius * Math.cos(-midAngle * RADIAN);
+//   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
+//   return (
+//     <text
+//       x={x}
+//       y={y}
+//       fill="white"
+//       textAnchor={x > cx ? "start" : "end"}
+//       dominantBaseline="central"
+//     >
+//       {`${(percent * 100).toFixed(0)}%`}
+//     </text>
+//   );
+// };
 
 export default function BestSellingChart({ isAnimationActive = true }) {
   return (
-    <div className="flex-1 min-h-20 min-w-20 flex justify-center items-center relative">
+    <>
       <PieChart
         style={{
           aspectRatio: 1,
@@ -75,6 +75,6 @@ export default function BestSellingChart({ isAnimationActive = true }) {
         />
         <p className="text-2xl ">100%</p>
       </div>
-    </div>
+    </>
   );
 }

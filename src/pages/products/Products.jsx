@@ -9,7 +9,9 @@ import foodsApi from "../../api/foodsApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { formatMoney } from "../../utils/formatMoney";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 export default function Products() {
+  const navigate = useNavigate();
   const [foods, setFoods] = useState([]);
   const [quantity, setQuantity] = useState(0);
   const [loadingFoods, setLoadingFoods] = useState(true);
@@ -45,6 +47,8 @@ export default function Products() {
     }
   };
 
+  const handleMove = () => navigate("/admin/products/create");
+
   return (
     <>
       {loadingFoods ? (
@@ -55,7 +59,7 @@ export default function Products() {
           <SubTitle
             active
             nameActive="sản phẩm"
-            handle={() => {}}
+            handleMove={handleMove}
             title="Quản lý sản phẩm"
             miniTitle={`Tổng: ${quantity} sản phẩm`}
           />

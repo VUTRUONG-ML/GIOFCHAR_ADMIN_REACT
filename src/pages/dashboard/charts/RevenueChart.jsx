@@ -7,7 +7,6 @@ import {
   YAxis,
 } from "recharts";
 import { formatMoney } from "../../../utils/formatMoney.js";
-import { data } from "react-router";
 
 const margin = {
   top: 20,
@@ -158,27 +157,21 @@ function CustomTooltip({ payload, label, active, range }) {
 
 export default function RevenueChart({ range }) {
   return (
-    <div className="flex-1 w-full h-full font-bold text-md text-secondary">
-      <ResponsiveContainer width="100%" height="100%" aspect={undefined}>
-        <BarChart
-          data={range == 7 ? data7Days : range == 30 ? data30Days : data90Days}
-          margin={margin}
-          key={range}
-        >
-          <XAxis
-            dataKey="name"
-            tickFormatter={(name) => getLabel(name, range)}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip content={<CustomTooltip range={range} />} />
-          <Bar
-            dataKey="uv"
-            fill="#4caf50"
-            shape={<RoundedBar range={range} />}
-          />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height="100%" aspect={undefined}>
+      <BarChart
+        data={range == 7 ? data7Days : range == 30 ? data30Days : data90Days}
+        margin={margin}
+        key={range}
+      >
+        <XAxis
+          dataKey="name"
+          tickFormatter={(name) => getLabel(name, range)}
+          axisLine={false}
+          tickLine={false}
+        />
+        <Tooltip content={<CustomTooltip range={range} />} />
+        <Bar dataKey="uv" fill="#4caf50" shape={<RoundedBar range={range} />} />
+      </BarChart>
+    </ResponsiveContainer>
   );
 }

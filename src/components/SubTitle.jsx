@@ -1,6 +1,6 @@
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
-export function SubTitle({ active, nameActive, handle, title, miniTitle }) {
+export function SubTitle({ active, nameActive, handleMove, title, miniTitle }) {
   return (
     <div className=" flex items-center justify-between h-18">
       {/* left-section */}
@@ -11,7 +11,7 @@ export function SubTitle({ active, nameActive, handle, title, miniTitle }) {
       {/* r-section */}
       {active && (
         <button
-          onClick={handle}
+          onClick={handleMove}
           className="flex bg-primary text-white text-sm items-center px-4 py-2 rounded-md cursor-pointer active:scale-98"
         >
           <AddOutlinedIcon className="mr-2" />
