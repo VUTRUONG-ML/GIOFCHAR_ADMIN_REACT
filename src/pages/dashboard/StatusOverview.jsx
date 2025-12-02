@@ -7,7 +7,6 @@ export function StatusOverview({
   contentStatus,
   icon,
 }) {
-  console.log(statusIncrease);
   return (
     <div className="flex-1 bg-white rounded-xl shadow flex items-start py-8 px-4">
       <div className="flex-3 h-full flex flex-col justify-around">
