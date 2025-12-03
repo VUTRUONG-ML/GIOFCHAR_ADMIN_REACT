@@ -3,10 +3,12 @@ import { SubTitle } from "../../components/SubTitle";
 import { CategoryCard } from "./CategoryCard";
 import categoriesApi from "../../api/categoriesApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { ModelCategory } from "./ModalCategory";
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [quantityCategory, setQuantityCategory] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -39,7 +41,7 @@ export default function Categories() {
           <SubTitle
             active
             nameActive="danh mục"
-            handle={() => {}}
+            handleMove={() => setOpenAddModal(true)}
             title="Quản lý danh mục"
             miniTitle={`Tổng: ${quantityCategory} danh mục`}
           />
@@ -58,6 +60,7 @@ export default function Categories() {
           </div>
         </>
       )}
+      {openAddModal && <ModelCategory onClose={() => setOpenAddModal(false)} />}
     </>
   );
 }
