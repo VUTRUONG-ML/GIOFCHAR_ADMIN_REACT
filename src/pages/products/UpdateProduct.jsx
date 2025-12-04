@@ -3,11 +3,11 @@ import { SubTitle } from "../../components/SubTitle";
 import { TextArea } from "../../components/TextArea";
 import { VND } from "../../constants/currency";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-export default function CreateProduct() {
+export default function UpdateProduct() {
   return (
     <>
       {/*subTitle */}
-      <SubTitle title="Thêm sản phấm mới" />
+      <SubTitle title="Chỉnh sửa thông tin sản phẩm" />
       {/* data */}
       <div className="flex-1 flex gap-4 py-1">
         <div className="flex-3 flex flex-col gap-3 bg-white shadow rounded-xl p-4">
@@ -89,7 +89,7 @@ export default function CreateProduct() {
           {/* button */}
           <div>
             <button className="bg-primary w-full border-0 rounded-lg text-md text-white font-medium py-3 cursor-pointer active:scale-95">
-              Thêm sản phẩm
+              Cập nhật sản phẩm
             </button>
           </div>
         </div>

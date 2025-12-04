@@ -3,10 +3,13 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import categoriesApi from "../../api/categoriesApi";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import { ModelCategory } from "./ModalCategory";
 export function CategoryCard({ category, categories, setCategories }) {
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const handleDelete = async (categoryId) => {
     if (category.quantityFood) {
-      alert("Bạn không được xóa danh mục khi sản phẩm trong danh mục vẫn còn!");
+      toast.warning("Sản phẩm trong danh mục vẫn còn!");
       return;
     }
     try {
@@ -21,30 +24,42 @@ export function CategoryCard({ category, categories, setCategories }) {
     }
   };
   return (
-    <div className="bg-white shadow rounded-xl flex justify-between p-4 h-50">
-      <div className="flex flex-col justify-around">
-        <div className="bg-primary text-white rounded-lg h-15 w-15 flex justify-center items-center">
-          <FolderCopyOutlinedIcon />
+    <>
+      <div className="bg-white shadow rounded-xl flex justify-between p-4 h-50">
+        <div className="flex flex-col justify-around">
+          <div className="bg-primary text-white rounded-lg h-15 w-15 flex justify-center items-center">
+            <FolderCopyOutlinedIcon />
+          </div>
+          <div className="text-xl font-extrabold">{category?.categoryName}</div>
+          <div className="text-sm font-extrabold">
+            {category?.categoryDescription}
+          </div>
+          <div className="text-sm text-secondary font-medium">
+            {category?.quantityFood} sản phẩm
+          </div>
         </div>
-        <div className="text-xl font-extrabold">{category?.categoryName}</div>
-        <div className="text-sm font-extrabold">
-          {category?.categoryDescription}
-        </div>
-        <div className="text-sm text-secondary font-medium">
-          {category?.quantityFood} sản phẩm
+        <div className="flex items-start gap-3 pt-3">
+          <button
+            className=" active:scale-95"
+            onClick={() => setOpenUpdateModal(true)}
+          >
+            <EditOutlinedIcon className="text-blue-800 cursor-pointer" />
+          </button>
+          <button
+            className="cursor-pointer active:scale-95"
+            onClick={() => handleDelete(category.categoryID)}
+          >
+            <DeleteForeverOutlinedIcon className="text-red-800 " />
+          </button>
         </div>
       </div>
-      <div className="flex items-start gap-3 pt-3">
-        <button className=" active:scale-95">
-          <EditOutlinedIcon className="text-blue-800 cursor-pointer" />
-        </button>
-        <button
-          className="cursor-pointer active:scale-95"
-          onClick={() => handleDelete(category.categoryID)}
-        >
-          <DeleteForeverOutlinedIcon className="text-red-800 " />
-        </button>
-      </div>
-    </div>
+
+      {openUpdateModal && (
+        <ModelCategory
+          nameBtnSubmit={"Cập nhật"}
+          onClose={() => setOpenUpdateModal(false)}
+        />
+      )}
+    </>
   );
 }

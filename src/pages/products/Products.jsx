@@ -48,6 +48,9 @@ export default function Products() {
   };
 
   const handleMove = () => navigate("/admin/products/create");
+  const updateProduct = (foodId) => {
+    navigate(`/admin/products/update/${foodId}`);
+  };
 
   return (
     <>
@@ -138,7 +141,9 @@ export default function Products() {
                             </td>
                             <td>
                               <div className="flex items-center gap-3">
-                                <button>
+                                <button
+                                  onClick={() => updateProduct(food.foodId)}
+                                >
                                   <EditOutlinedIcon className="text-blue-800 cursor-pointer active:scale-95" />
                                 </button>
                                 <button

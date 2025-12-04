@@ -12,6 +12,7 @@ import OrderDetail from "../pages/orders/OrderDetail";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import CreateProduct from "../pages/products/CreateProduct";
+import UpdateProduct from "../pages/products/UpdateProduct";
 export const router = createBrowserRouter([
   {
     path: "/auth",
@@ -39,6 +40,11 @@ export const router = createBrowserRouter([
         path: "products/create",
         Component: CreateProduct,
         handle: { title: "Thêm sản phẩm" },
+      },
+      {
+        path: "products/update/:foodId",
+        Component: UpdateProduct,
+        handle: { title: "Chỉnh sửa thông tin sản phẩm" },
       },
       {
         path: "orders",

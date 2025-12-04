@@ -60,7 +60,12 @@ export default function Categories() {
           </div>
         </>
       )}
-      {openAddModal && <ModelCategory onClose={() => setOpenAddModal(false)} />}
+      {openAddModal && (
+        <ModelCategory
+          onClose={() => setOpenAddModal(false)}
+          nameBtnSubmit={"Tạo"}
+        />
+      )}
     </>
   );
 }
