@@ -7,7 +7,12 @@ import { useState } from "react";
 import { ModelCategory } from "./ModalCategory";
 import { useConfirm } from "../../contexts/ConfirmContext";
 import { useLoader } from "../../contexts/LoaderContext";
-export function CategoryCard({ category, categories, setCategories }) {
+export function CategoryCard({
+  category,
+  categories,
+  setCategories,
+  setQuantityCategory,
+}) {
   const { confirm } = useConfirm();
   const { setLoading } = useLoader();
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -27,7 +32,7 @@ export function CategoryCard({ category, categories, setCategories }) {
       setCategories(
         categories.filter((category) => category.categoryID !== categoryId)
       );
-
+      setQuantityCategory((prev) => prev + 1);
       toast.success("Xóa danh mục thành công");
     } catch (error) {
       return;

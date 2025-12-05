@@ -1,4 +1,4 @@
-export function TextArea({ label, placeHolder }) {
+export function TextArea({ label, placeHolder, ...props }) {
   return (
     <>
       <label htmlFor="" className="text-sm font-bold">
@@ -12,6 +12,7 @@ export function TextArea({ label, placeHolder }) {
                           focus:outline-none 
                           border border-gray-300 rounded-lg placeholder:text-md placeholder:text-gray-400 text-md py-2 px-3"
         placeholder={placeHolder}
+        {...props}
       ></textarea>
     </>
   );

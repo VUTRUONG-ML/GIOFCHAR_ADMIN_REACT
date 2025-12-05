@@ -49,6 +49,9 @@ axiosClient.interceptors.response.use(
       case 404:
         console.warn("API not found", message);
         break;
+      case 409:
+        console.warn("Conflict", message);
+        break;
       case 500:
         console.warn("Server error");
         break;

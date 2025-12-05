@@ -4,16 +4,20 @@ import { CategoryCard } from "./CategoryCard";
 import categoriesApi from "../../api/categoriesApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { ModelCategory } from "./ModalCategory";
+import { useLoader } from "../../contexts/LoaderContext";
+import { toast } from "react-toastify";
 export default function Categories() {
+  const { setLoading } = useLoader();
+
   const [categories, setCategories] = useState([]);
   const [quantityCategory, setQuantityCategory] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loadingPage, setLoadingPage] = useState(true);
   const [openAddModal, setOpenAddModal] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
     const loadCategories = async () => {
-      setLoading(true);
+      setLoadingPage(true);
       try {
         const response = await categoriesApi.getCategories(controller.signal);
         setCategories(response.data?.categories);
@@ -21,7 +25,7 @@ export default function Categories() {
       } catch (error) {
         if (error.name === "CanceledError") return;
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted) setLoadingPage(false);
       }
     };
     loadCategories();
@@ -29,7 +33,37 @@ export default function Categories() {
     return () => controller.abort();
   }, []);
 
-  if (loading) return <LoadingSpinner />;
+  const handleCreateCategory = async (categoryName, categoryDescription) => {
+    setLoading(true);
+    try {
+      const response = await categoriesApi.createCategory({
+        categoryName,
+        categoryDescription,
+      });
+      const newCategory = response.data?.categoryId;
+      setCategories((prev) => [
+        ...prev,
+        {
+          categoryID: newCategory,
+          categoryName,
+          categoryDescription,
+          quantityFood: 0,
+        },
+      ]);
+
+      setQuantityCategory((prev) => prev + 1);
+      setOpenAddModal(false);
+      toast.success("Tạo danh mục mới thành công!");
+    } catch (error) {
+      if (error.response?.status == 409) {
+        toast.warn("Tên danh mục đã tồn tại!");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loadingPage) return <LoadingSpinner />;
 
   return (
     <>
@@ -46,7 +80,7 @@ export default function Categories() {
             miniTitle={`Tổng: ${quantityCategory} danh mục`}
           />
           {/* data */}
-          <div className="flex-1 grid grid-cols-3 gap-5  py-1 px-4 overflow-y-auto max-h-[calc(98vh-180px)]">
+          <div className="flex-1 grid grid-cols-3 gap-4  py-1 px-4 overflow-y-auto max-h-[calc(100vh-180px)]">
             {categories.map((category) => {
               return (
                 <CategoryCard
@@ -54,6 +88,7 @@ export default function Categories() {
                   category={category}
                   setCategories={setCategories}
                   categories={categories}
+                  setQuantityCategory={setQuantityCategory}
                 />
               );
             })}
@@ -64,6 +99,7 @@ export default function Categories() {
         <ModelCategory
           onClose={() => setOpenAddModal(false)}
           nameBtnSubmit={"Tạo"}
+          onSubmit={handleCreateCategory}
         />
       )}
     </>

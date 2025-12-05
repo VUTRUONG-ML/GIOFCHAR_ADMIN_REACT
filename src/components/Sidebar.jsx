@@ -36,7 +36,7 @@ export default function Sidebar() {
         <Menu title="Tài khoản" icon={AccountCircleOutlinedIcon} to="my" />
       </div>
       {/* logout */}
-      <div className="flex items-center mb-4 border-t border-gray-300 pt-8 pl-5 text-primary cursor-pointer">
+      <div className="flex items-center pb-4 border-t border-gray-300 pt-8 pl-5 text-primary cursor-pointer">
         <LogoutOutlinedIcon className="mr-2" />
         <p className="text-lg font-bold">Đăng xuất</p>
       </div>
