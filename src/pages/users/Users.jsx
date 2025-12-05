@@ -78,7 +78,7 @@ export default function Users() {
             {!quantityUser ? (
               <div>Danh sách khách hàng rỗng</div>
             ) : (
-              <div className="pt-6 mt-2 font-medium overflow-y-auto max-h-[calc(98vh-200px)]">
+              <div className=" mt-2 font-medium overflow-y-auto max-h-[calc(98vh-180px)]">
                 <table className="w-full table-fixed">
                   <thead className="text-left">
                     <tr className="border-b border-gray-200">

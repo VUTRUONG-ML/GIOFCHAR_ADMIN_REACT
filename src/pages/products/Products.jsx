@@ -93,7 +93,7 @@ export default function Products() {
             </div>
             {/* table */}
 
-            <div className="pt-3 mt-2 font-medium overflow-y-auto max-h-[calc(98vh-250px)]">
+            <div className=" font-medium overflow-y-auto max-h-[calc(98vh-180px)]">
               {!quantity ? (
                 <div>Danh sách rỗng</div>
               ) : (

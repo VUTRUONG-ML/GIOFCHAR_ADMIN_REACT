@@ -7,6 +7,9 @@ const categoriesApi = {
     // categoryName, categoryDescription
     return axiosClient.post("/categories", data);
   },
+  updateCategory(categoryId, dataUpdate) {
+    return axiosClient.put(`/categories/${categoryId}`, dataUpdate);
+  },
   deleteCategory(categoryId) {
     return axiosClient.delete(`/categories/${categoryId}`);
   },

@@ -6,6 +6,7 @@ export function ModelCategory({
   onClose,
   nameBtnSubmit,
   onSubmit,
+  categoryId,
   initValue = { categoryName: "", categoryDescription: "" },
 }) {
   const [categoryName, setCategoryName] = useState(initValue.categoryName);
@@ -13,7 +14,9 @@ export function ModelCategory({
     initValue.categoryDescription
   );
   const handleSubmit = () => {
-    onSubmit(categoryName, categoryDescription);
+    console.log("chec modal", categoryId, categoryName, categoryDescription);
+
+    onSubmit({ categoryId, categoryName, categoryDescription });
   };
   return (
     <div className=" fixed inset-0 flex items-center justify-center bg-black/40 z-50">

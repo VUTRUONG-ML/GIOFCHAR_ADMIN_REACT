@@ -48,8 +48,8 @@ export default function BestSellingChart({ isAnimationActive = true }) {
         style={{
           aspectRatio: 1,
         }}
-        width={240}
-        height={240}
+        width={230}
+        height={230}
         responsive
       >
         <Pie

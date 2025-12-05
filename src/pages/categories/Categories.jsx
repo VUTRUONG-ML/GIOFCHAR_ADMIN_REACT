@@ -33,7 +33,10 @@ export default function Categories() {
     return () => controller.abort();
   }, []);
 
-  const handleCreateCategory = async (categoryName, categoryDescription) => {
+  const handleCreateCategory = async ({
+    categoryName,
+    categoryDescription,
+  }) => {
     setLoading(true);
     try {
       const response = await categoriesApi.createCategory({
@@ -80,7 +83,7 @@ export default function Categories() {
             miniTitle={`Tổng: ${quantityCategory} danh mục`}
           />
           {/* data */}
-          <div className="flex-1 grid grid-cols-3 gap-4  py-1 px-4 overflow-y-auto max-h-[calc(100vh-180px)]">
+          <div className="flex-1 grid grid-cols-3 gap-4  py-1 px-4 overflow-y-auto max-h-[calc(98vh-160px)]">
             {categories.map((category) => {
               return (
                 <CategoryCard

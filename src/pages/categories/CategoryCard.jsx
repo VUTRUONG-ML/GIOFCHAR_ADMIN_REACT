@@ -16,6 +16,7 @@ export function CategoryCard({
   const { confirm } = useConfirm();
   const { setLoading } = useLoader();
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
+
   const handleDelete = async (categoryId) => {
     const ok = await confirm({
       title: "Xác nhận xóa danh mục!",
@@ -32,10 +33,43 @@ export function CategoryCard({
       setCategories(
         categories.filter((category) => category.categoryID !== categoryId)
       );
-      setQuantityCategory((prev) => prev + 1);
+      setQuantityCategory((prev) => prev - 1);
       toast.success("Xóa danh mục thành công");
     } catch (error) {
       return;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateCategory = async ({
+    categoryId,
+    categoryName,
+    categoryDescription,
+  }) => {
+    setLoading(true);
+    try {
+      await categoriesApi.updateCategory(categoryId, {
+        categoryName,
+        categoryDescription,
+      });
+      setCategories((prev) =>
+        prev.map((c) =>
+          c.categoryID === categoryId
+            ? {
+                ...c,
+                categoryName: categoryName,
+                categoryDescription: categoryDescription,
+              }
+            : c
+        )
+      );
+      setOpenUpdateModal(false);
+      toast.success("Cập nhật danh mục thành công");
+    } catch (error) {
+      if (error.response?.status === 409) {
+        toast.warn("Tên danh mục đã tồn tại!");
+      }
     } finally {
       setLoading(false);
     }
@@ -73,8 +107,14 @@ export function CategoryCard({
 
       {openUpdateModal && (
         <ModelCategory
+          categoryId={category.categoryID}
+          initValue={{
+            categoryName: category.categoryName,
+            categoryDescription: category.categoryDescription,
+          }}
           nameBtnSubmit={"Cập nhật"}
           onClose={() => setOpenUpdateModal(false)}
+          onSubmit={handleUpdateCategory}
         />
       )}
     </>

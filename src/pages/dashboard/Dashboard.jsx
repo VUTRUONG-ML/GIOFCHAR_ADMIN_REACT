@@ -69,7 +69,7 @@ export default function DashBoard() {
           <div className="flex-1 bg-white rounded-xl shadow p-4 flex flex-col">
             <p className="text-2xl font-extrabold">Sản phẩm bán chạy</p>
             {/* Chart */}
-            <div className="flex-1 min-h-20 min-w-20 flex justify-center items-center relative">
+            <div className="flex-1 min-h-18 min-w-20 flex justify-center items-center relative">
               <BestSellingChart />
             </div>
             {/* List best sell */}
