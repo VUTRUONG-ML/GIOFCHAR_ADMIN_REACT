@@ -7,13 +7,20 @@ import App from "./App.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { ToastContainer } from "react-toastify";
 import { ConfirmProvider } from "./contexts/ConfirmContext.jsx";
+import { LoaderProvider } from "./contexts/LoaderContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <ConfirmProvider>
-        <App />
-        <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+        <LoaderProvider>
+          <App />
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar
+          />
+        </LoaderProvider>
       </ConfirmProvider>
     </AuthProvider>
   </StrictMode>

@@ -10,7 +10,12 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import { formatMoney } from "../../utils/formatMoney";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { useConfirm } from "../../contexts/ConfirmContext";
+import { useLoader } from "../../contexts/LoaderContext";
 export default function Products() {
+  const { confirm } = useConfirm();
+  const { setLoading } = useLoader();
+
   const navigate = useNavigate();
   const [foods, setFoods] = useState([]);
   const [quantity, setQuantity] = useState(0);
@@ -36,6 +41,12 @@ export default function Products() {
   }, []);
 
   const handleDelete = async (foodId) => {
+    const ok = await confirm({
+      title: "Xác nhận xóa sản phẩm!",
+      message: "Bạn có chắc chắn muốn xóa sản phẩm này?",
+    });
+    if (!ok) return;
+    setLoading(true);
     try {
       await foodsApi.deleteFood(foodId);
 
@@ -44,6 +55,8 @@ export default function Products() {
       toast.success("Xóa sản phẩm thành công");
     } catch (error) {
       return;
+    } finally {
+      setLoading(false);
     }
   };
 

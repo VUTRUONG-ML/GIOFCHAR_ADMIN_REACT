@@ -5,13 +5,23 @@ import categoriesApi from "../../api/categoriesApi";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { ModelCategory } from "./ModalCategory";
+import { useConfirm } from "../../contexts/ConfirmContext";
+import { useLoader } from "../../contexts/LoaderContext";
 export function CategoryCard({ category, categories, setCategories }) {
+  const { confirm } = useConfirm();
+  const { setLoading } = useLoader();
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const handleDelete = async (categoryId) => {
+    const ok = await confirm({
+      title: "Xác nhận xóa danh mục!",
+      message: "Bạn có chắc chắn muốn xóa danh mục này?",
+    });
+    if (!ok) return;
     if (category.quantityFood) {
       toast.warning("Sản phẩm trong danh mục vẫn còn!");
       return;
     }
+    setLoading(true);
     try {
       await categoriesApi.deleteCategory(category.categoryID);
       setCategories(
@@ -21,6 +31,8 @@ export function CategoryCard({ category, categories, setCategories }) {
       toast.success("Xóa danh mục thành công");
     } catch (error) {
       return;
+    } finally {
+      setLoading(false);
     }
   };
   return (

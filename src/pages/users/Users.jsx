@@ -6,15 +6,19 @@ import { useEffect, useState } from "react";
 import usersApi from "../../api/usersApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "react-toastify";
+import { useConfirm } from "../../contexts/ConfirmContext";
+import { useLoader } from "../../contexts/LoaderContext";
 export default function Users() {
+  const { confirm } = useConfirm();
+  const { setLoading } = useLoader();
   const [users, setUsers] = useState([]);
   const [quantityUser, setQuantityUser] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loadingPage, setLoadingPage] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
     const loadUsersData = async () => {
-      setLoading(true);
+      setLoadingPage(true);
       try {
         const response = await usersApi.getUsers(controller.signal);
         setUsers(response.data?.users);
@@ -22,7 +26,7 @@ export default function Users() {
       } catch (error) {
         if (error.name === "CanceledError") return;
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted) setLoadingPage(false);
       }
     };
     loadUsersData();
@@ -30,6 +34,14 @@ export default function Users() {
   }, []);
 
   const updateActive = async (isActive, userId) => {
+    const ok = await confirm({
+      title: "Xác nhận thay đổi?",
+      message: `Bạn có chắc chắn muốn ${
+        isActive ? "bỏ chặn" : "chặn"
+      } người dùng?`,
+    });
+    if (!ok) return;
+    setLoading(true);
     try {
       await usersApi.updateActiveUser({ isActive }, userId);
 
@@ -44,11 +56,13 @@ export default function Users() {
       toast.success("Cập nhật tài khoản khách hàng thành công");
     } catch (error) {
       // processed
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <>
-      {loading ? (
+      {loadingPage ? (
         <LoadingSpinner />
       ) : (
         <>
