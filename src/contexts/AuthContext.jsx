@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import authApi from "../api/authApi";
+import { authService } from "../utils/authService";
 
 const AuthContext = createContext();
 export function AuthProvider({ children }) {
@@ -35,6 +36,7 @@ export function AuthProvider({ children }) {
       }
     };
     loadAccount();
+    authService.setLogout(logout);
   }, []);
 
   const value = { user, login, logout, loading, setLoading };

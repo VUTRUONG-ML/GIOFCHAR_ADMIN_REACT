@@ -13,63 +13,70 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import CreateProduct from "../pages/products/CreateProduct";
 import UpdateProduct from "../pages/products/UpdateProduct";
+import NavigatorInit from "../utils/NavigatorInit";
 export const router = createBrowserRouter([
   {
-    path: "/auth",
-    element: (
-      <PublicRoute>
-        <Login />
-      </PublicRoute>
-    ),
-  },
-  {
-    path: "/admin",
-    element: (
-      <ProtectedRoute>
-        <AdminLayout />
-      </ProtectedRoute>
-    ),
+    path: "/",
+    element: <NavigatorInit />,
     children: [
-      { index: true, Component: Dashboard },
       {
-        path: "products",
-        Component: Products,
-        handle: { title: "Quản lý sản phẩm" },
+        path: "/auth",
+        element: (
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        ),
       },
       {
-        path: "products/create",
-        Component: CreateProduct,
-        handle: { title: "Thêm sản phẩm" },
-      },
-      {
-        path: "products/update/:foodId",
-        Component: UpdateProduct,
-        handle: { title: "Chỉnh sửa thông tin sản phẩm" },
-      },
-      {
-        path: "orders",
-        Component: Orders,
-        handle: { title: "Quản lý đơn hàng" },
-      },
-      {
-        path: "orders/:orderId",
-        Component: OrderDetail,
-        handle: { title: "Chi tiết đơn hàng" },
-      },
-      {
-        path: "users",
-        Component: Users,
-        handle: { title: "Quản lý khách hàng" },
-      },
-      {
-        path: "categories",
-        Component: Categories,
-        handle: { title: "Quản lý danh mục" },
-      },
-      {
-        path: "my",
-        Component: MyAccount,
-        handle: { title: "Thông tin tài khoản" },
+        path: "/admin",
+        element: (
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          { index: true, Component: Dashboard },
+          {
+            path: "products",
+            Component: Products,
+            handle: { title: "Quản lý sản phẩm" },
+          },
+          {
+            path: "products/create",
+            Component: CreateProduct,
+            handle: { title: "Thêm sản phẩm" },
+          },
+          {
+            path: "products/update/:foodId",
+            Component: UpdateProduct,
+            handle: { title: "Chỉnh sửa thông tin sản phẩm" },
+          },
+          {
+            path: "orders",
+            Component: Orders,
+            handle: { title: "Quản lý đơn hàng" },
+          },
+          {
+            path: "orders/:orderId",
+            Component: OrderDetail,
+            handle: { title: "Chi tiết đơn hàng" },
+          },
+          {
+            path: "users",
+            Component: Users,
+            handle: { title: "Quản lý khách hàng" },
+          },
+          {
+            path: "categories",
+            Component: Categories,
+            handle: { title: "Quản lý danh mục" },
+          },
+          {
+            path: "my",
+            Component: MyAccount,
+            handle: { title: "Thông tin tài khoản" },
+          },
+        ],
       },
     ],
   },

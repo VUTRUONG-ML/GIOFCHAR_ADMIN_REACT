@@ -22,11 +22,6 @@ body,
   body {
     font-family: "Roboto", sans-serif;
   }
-  input:focus,
-  textarea:focus,
-  select:focus {
-    @apply outline-none ring-1;
-  }
 }
 @keyframes zoomIn {
   from {
