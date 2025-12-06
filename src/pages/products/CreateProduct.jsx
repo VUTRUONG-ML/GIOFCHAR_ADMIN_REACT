@@ -1,16 +1,38 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InputCreate } from "../../components/InputCreate";
 import { SubTitle } from "../../components/SubTitle";
 import { TextArea } from "../../components/TextArea";
 import { VND } from "../../constants/currency";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { toast } from "react-toastify";
+import categoriesApi from "../../api/categoriesApi";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import foodsApi from "../../api/foodsApi";
+import { useNavigate } from "react-router";
+import { useLoader } from "../../contexts/LoaderContext";
 export default function CreateProduct() {
-  const [linkImage, setLinkImage] = useState(null);
   const fileInputRef = useRef(null);
+  const { setLoading } = useLoader();
+
+  const [linkImage, setLinkImage] = useState(null);
+  const [loadingPage, setLoadingPage] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [categoryID, setCategoryID] = useState(0);
+  const [food, setFood] = useState({
+    foodName: "",
+    foodDescription: "",
+    price: "",
+    discount: 0,
+    rating: 0,
+    stock: "",
+    isActive: 1,
+    categoryID: "",
+    imageFood: null,
+  });
+
+  const navigate = useNavigate();
   const handleOpenFolder = () => fileInputRef.current.click();
   const handleFileChange = (e) => {
-    console.log(e.target);
     const file = e.target.files[0];
     if (!file) return;
 
@@ -22,7 +44,47 @@ export default function CreateProduct() {
 
     const url = URL.createObjectURL(file);
     setLinkImage(url);
+    setFood((prev) => ({ ...prev, imageFood: file }));
   };
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const loadCategory = async () => {
+      setLoadingPage(true);
+      try {
+        const response = await categoriesApi.getCategories(controller.signal);
+        setCategories(response.data?.categories);
+      } catch (error) {
+        if (error.name === "CanceledError") return;
+      } finally {
+        if (controller.signal.aborted) setLoadingPage(false);
+      }
+    };
+
+    loadCategory();
+    return () => controller.abort();
+  }, []);
+  const handleCreateProduct = async () => {
+    setLoading(true);
+    const formData = new FormData();
+    Object.keys(food).map((key) => {
+      formData.append(key, food[key]);
+    });
+    console.log(food);
+    try {
+      await foodsApi.createFood(formData);
+      navigate("/admin/products");
+      toast.success("Tạo sản phẩm mới thành công");
+    } catch (error) {
+      if (error.response.status === 409) {
+        toast.warn("Sản phẩm đã tồn tại!");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loadingPage) return <LoadingSpinner />;
   return (
     <>
       {/*subTitle */}
@@ -68,6 +130,10 @@ export default function CreateProduct() {
               <InputCreate
                 label={"Tên sản phẩm"}
                 placeHolder={"Giò lụa đặc biệt"}
+                value={food.foodName}
+                onChange={(e) =>
+                  setFood((prev) => ({ ...prev, foodName: e.target.value }))
+                }
               />
             </div>
             {/* category */}
@@ -82,23 +148,47 @@ export default function CreateProduct() {
                           focus:ring-0 
                           focus:outline-none   
                           border border-gray-300 rounded-lg text-md py-2 px-3"
+                value={food.categoryID}
+                onChange={(e) =>
+                  setFood((prev) => ({ ...prev, categoryID: e.target.value }))
+                }
               >
-                <option value="none">Chọn danh mục</option>
-                <option value="1">Nem</option>
-                <option value="2">Chả</option>
-                <option value="3">Giò</option>
-                <option value="4">xúc xích</option>
+                <option value="">Chọn danh mục</option>
+                {categories.map((category) => {
+                  return (
+                    <option
+                      key={category.categoryID}
+                      value={category.categoryID}
+                    >
+                      {category.categoryName}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
           <div className="flex items-center w-full gap-2">
             {/* price */}
             <div className="flex-1 flex flex-col items-start gap-2">
-              <InputCreate label={`Giá (${VND})`} placeHolder={"0"} />
+              <InputCreate
+                label={`Giá (${VND})`}
+                placeHolder={"0"}
+                value={food.price}
+                onChange={(e) =>
+                  setFood((prev) => ({ ...prev, price: e.target.value }))
+                }
+              />
             </div>
             {/* stock */}
             <div className="flex-1 flex flex-col items-start gap-2">
-              <InputCreate label={"Tồn kho (kg)"} placeHolder={0} />
+              <InputCreate
+                label={"Tồn kho (kg)"}
+                placeHolder={0}
+                value={food.stock}
+                onChange={(e) =>
+                  setFood((prev) => ({ ...prev, stock: e.target.value }))
+                }
+              />
             </div>
           </div>
         </div>
@@ -110,6 +200,13 @@ export default function CreateProduct() {
               placeHolder={
                 "Giò lụa được làm từ thịt heo nặc tươi ngon, gia vị truyền thống..."
               }
+              value={food.foodDescription}
+              onChange={(e) => {
+                setFood((prev) => ({
+                  ...prev,
+                  foodDescription: e.target.value,
+                }));
+              }}
             />
           </div>
           {/* active */}
@@ -123,14 +220,24 @@ export default function CreateProduct() {
                           focus:ring-0 
                           focus:outline-none   
                           border border-gray-300 rounded-lg text-md py-2 px-3"
+              value={food.isActive}
+              onChange={(e) =>
+                setFood((prev) => ({
+                  ...prev,
+                  isActive: e.target.value,
+                }))
+              }
             >
-              <option value="none">Đang bán</option>
-              <option value="1">Tạm ẩn</option>
+              <option value="true">Đang bán</option>
+              <option value="false">Tạm ẩn</option>
             </select>
           </div>
           {/* button */}
           <div>
-            <button className="bg-primary w-full border-0 rounded-lg text-md text-white font-medium py-3 cursor-pointer active:scale-95">
+            <button
+              className="bg-primary w-full border-0 rounded-lg text-md text-white font-medium py-3 cursor-pointer active:scale-95"
+              onClick={handleCreateProduct}
+            >
               Thêm sản phẩm
             </button>
           </div>

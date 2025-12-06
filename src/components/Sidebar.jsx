@@ -7,7 +7,23 @@ import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Menu } from "./Menu";
+import { useNavigate } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
+import { useConfirm } from "../contexts/ConfirmContext";
 export default function Sidebar() {
+  const navigate = useNavigate();
+
+  const { logout } = useAuth();
+  const { confirm } = useConfirm();
+  const handleLogout = async () => {
+    const ok = await confirm({
+      title: "Xác nhận thoát phiên làm việc!",
+      message: "Bạn có chắc chắn muốn kết thúc phiên làm việc hiện tại?",
+    });
+    if (!ok) return;
+    logout();
+    navigate("/auth");
+  };
   return (
     <div
       className="
@@ -36,7 +52,10 @@ export default function Sidebar() {
         <Menu title="Tài khoản" icon={AccountCircleOutlinedIcon} to="my" />
       </div>
       {/* logout */}
-      <div className="flex items-center pb-4 border-t border-gray-300 pt-8 pl-5 text-primary cursor-pointer">
+      <div
+        className="flex items-center pb-4 border-t border-gray-300 pt-8 pl-5 text-primary cursor-pointer"
+        onClick={handleLogout}
+      >
         <LogoutOutlinedIcon className="mr-2" />
         <p className="text-lg font-bold">Đăng xuất</p>
       </div>
