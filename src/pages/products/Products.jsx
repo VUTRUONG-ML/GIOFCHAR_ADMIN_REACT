@@ -91,9 +91,9 @@ export default function Products() {
               <div className="bg-gray-200 py-1 px-3 rounded-md">Nem</div>
               <div className="bg-gray-200 py-1 px-3 rounded-md">Khác</div>
             </div>
-            {/* table */}
 
-            <div className=" font-medium overflow-y-auto max-h-[calc(98vh-180px)]">
+            {/* table */}
+            <div className=" font-medium overflow-y-auto max-h-[calc(98vh-260px)]">
               {!quantity ? (
                 <div>Danh sách rỗng</div>
               ) : (

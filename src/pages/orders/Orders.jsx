@@ -65,7 +65,7 @@ export default function Orders() {
             {!quantity ? (
               <div>Danh sách rỗng </div>
             ) : (
-              <div className="pt-3 mt-2 font-medium overflow-y-auto max-h-[calc(98vh-250px)]">
+              <div className="pt-3 mt-2 font-medium overflow-y-auto max-h-[calc(98vh-260px)]">
                 <table className="w-full table-fixed">
                   <thead className="text-left">
                     <tr className="border-b border-gray-200">

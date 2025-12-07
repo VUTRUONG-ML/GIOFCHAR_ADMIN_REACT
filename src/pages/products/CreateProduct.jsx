@@ -17,7 +17,6 @@ export default function CreateProduct() {
   const [linkImage, setLinkImage] = useState(null);
   const [loadingPage, setLoadingPage] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [categoryID, setCategoryID] = useState(0);
   const [food, setFood] = useState({
     foodName: "",
     foodDescription: "",
@@ -57,7 +56,7 @@ export default function CreateProduct() {
       } catch (error) {
         if (error.name === "CanceledError") return;
       } finally {
-        if (controller.signal.aborted) setLoadingPage(false);
+        if (!controller.signal.aborted) setLoadingPage(false);
       }
     };
 
@@ -70,7 +69,6 @@ export default function CreateProduct() {
     Object.keys(food).map((key) => {
       formData.append(key, food[key]);
     });
-    console.log(food);
     try {
       await foodsApi.createFood(formData);
       navigate("/admin/products");
