@@ -4,7 +4,18 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import profilePicture from "../assets/profile.jpg";
+import { useAuth } from "../contexts/AuthContext";
+import { useState } from "react";
 export default function MyAccount() {
+  const { user } = useAuth();
+  const [userInfo, setUserInfo] = useState({
+    userName: user.userName,
+    email: user.email,
+    phone: user.phone,
+    address: user.address,
+    role: user.role,
+  });
+
   return (
     <>
       {/*subTitle */}
@@ -15,7 +26,7 @@ export default function MyAccount() {
       />
       {/* data */}
       <div className="flex-1 flex  py-1 gap-4.5 h-full">
-        {/* col1 */}
+        {/* col display */}
         <div className="flex-1 bg-white shadow rounded-xl flex flex-col items-center py-4 gap-3">
           <div>
             <img
@@ -24,13 +35,13 @@ export default function MyAccount() {
               className="w-50 h-50 object-cover rounded-full"
             />
           </div>
-          <p className="font-bold text-2xl">Quảng trị viên</p>
-          <p className="font-normal text-md">admin@giochatruyenthong.com</p>
+          <p className="font-bold text-2xl">{userInfo.userName}</p>
+          <p className="font-normal text-md">{userInfo.email}</p>
           <div className="bg-gray-200 py-2 px-22 rounded-md text-md font-medium cursor-pointer active:scale-95 ">
-            <button className="w-full">Đổi ảnh đại diện</button>
+            <button className="w-full cursor-pointer">Đổi ảnh đại diện</button>
           </div>
         </div>
-        {/* col2 */}
+        {/* col update info */}
         <div className="flex-2  flex flex-col gap-4.5">
           <div className="bg-white shadow rounded-xl  flex flex-col gap-3 px-4.5 py-4  justify-around text-secondary font-medium text-sm">
             <div className="flex gap-2 items-center">
@@ -44,7 +55,10 @@ export default function MyAccount() {
               <input
                 type="text"
                 className="h-10 w-full border border-gray-300 rounded-md shadow text-black text-[16px] font-medium px-3 py-3"
-                value="Quản trị viên"
+                value={userInfo.userName}
+                onChange={(e) =>
+                  setUserInfo((prev) => ({ ...prev, userName: e.target.value }))
+                }
               />
             </div>
             <div className="flex flex-col gap-1.5 justify-start">
@@ -52,7 +66,10 @@ export default function MyAccount() {
               <input
                 type="text"
                 className="h-10 w-full border border-gray-300 rounded-md shadow text-black text-[16px] font-medium px-3 py-3"
-                value="admin@giochatruyenthong.com"
+                value={userInfo.email}
+                onChange={(e) =>
+                  setUserInfo((prev) => ({ ...prev, email: e.target.value }))
+                }
               />
             </div>
             <div className="flex flex-col gap-1.5 justify-start">
@@ -60,7 +77,10 @@ export default function MyAccount() {
               <input
                 type="text"
                 className="h-10 w-full border border-gray-300 rounded-md shadow text-black text-[16px] font-medium px-3 py-3"
-                value=""
+                value={userInfo.phone}
+                onChange={(e) =>
+                  setUserInfo((prev) => ({ ...prev, phone: e.target.value }))
+                }
                 placeholder="Chưa cập nhật"
               />
             </div>

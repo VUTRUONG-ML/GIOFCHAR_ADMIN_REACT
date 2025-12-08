@@ -54,6 +54,9 @@ export default function Products() {
 
       toast.success("Xóa sản phẩm thành công");
     } catch (error) {
+      if (error.status === 400) {
+        toast.warn("Sản phẩm còn tồn tại trong đơn hàng!");
+      }
       return;
     } finally {
       setLoading(false);
