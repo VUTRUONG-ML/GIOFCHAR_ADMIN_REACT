@@ -33,18 +33,22 @@ export default function UpdateProduct() {
   const navigate = useNavigate();
   const handleOpenFolder = () => fileInputRef.current.click();
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    const input = e.target;
+    const file = input.files[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > 15 * 1024 * 1024) {
       // switch byte 1 MB = 1024 * 1024 byte
       toast.warn("Vui lòng chọn ảnh có kích thước bé hơn!");
+      input.value = "";
       return;
     }
 
     const url = URL.createObjectURL(file);
     setLinkImage(url);
     setFood((prev) => ({ ...prev, imageFood: file }));
+
+    input.value = "";
   };
 
   useEffect(() => {
@@ -234,8 +238,8 @@ export default function UpdateProduct() {
                 }))
               }
             >
-              <option value="true">Đang bán</option>
-              <option value="false">Tạm ẩn</option>
+              <option value="1">Đang bán</option>
+              <option value="0">Tạm ẩn</option>
             </select>
           </div>
           {/* button */}

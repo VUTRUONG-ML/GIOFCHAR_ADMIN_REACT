@@ -92,7 +92,7 @@ export default function Orders() {
                           </td>
                           <td>
                             <div className="flex flex-col justify-center py-3">
-                              <p className="text-black">{order.userName}</p>
+                              <p className="text-black">{order.customerName}</p>
                               <p className="text-[12px] text-secondary">
                                 {order.email}
                               </p>

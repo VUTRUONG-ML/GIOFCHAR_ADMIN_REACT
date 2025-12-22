@@ -122,13 +122,13 @@ export default function Products() {
                             <td className="py-2">
                               <div className="flex items-center gap-1">
                                 <img
-                                  src={productPicture}
+                                  src={food.image}
                                   alt="Ảnh sp"
                                   className="w-12 h-12 rounded-xl object-cover"
                                 />
                                 <div>
                                   <p>{food.foodName}</p>
-                                  <p className="text-[12px] text-secondary font-normal">
+                                  <p className="text-[12px] text-secondary font-normal truncate max-w-[220px]">
                                     {/* Giò lụa cao cấp từ thịt heo nạc tươi... */}
                                     {food.foodDescription}
                                   </p>

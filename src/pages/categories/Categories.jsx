@@ -70,18 +70,18 @@ export default function Categories() {
 
   return (
     <>
+      {/*subTitle */}
+      <SubTitle
+        active
+        nameActive="danh mục"
+        handleMove={() => setOpenAddModal(true)}
+        title="Quản lý danh mục"
+        miniTitle={`Tổng: ${quantityCategory} danh mục`}
+      />
       {quantityCategory === 0 ? (
         <div>Danh sách danh mục rỗng</div>
       ) : (
         <>
-          {/*subTitle */}
-          <SubTitle
-            active
-            nameActive="danh mục"
-            handleMove={() => setOpenAddModal(true)}
-            title="Quản lý danh mục"
-            miniTitle={`Tổng: ${quantityCategory} danh mục`}
-          />
           {/* data */}
           <div className="flex-1 grid grid-cols-3 gap-4  py-1 px-4 overflow-y-auto max-h-[calc(98vh-160px)]">
             {categories.map((category) => {

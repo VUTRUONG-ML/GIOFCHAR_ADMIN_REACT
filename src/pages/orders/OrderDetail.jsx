@@ -137,11 +137,15 @@ export default function OrderDetail() {
                 </div>
                 <div className="text-md font-medium">
                   <p className="text-sm text-secondary">Họ và tên</p>
-                  <p className="">{order.userName}</p>
+                  <p className="">{order.customerName}</p>
                 </div>
                 <div className="text-md font-medium">
                   <p className="text-sm text-secondary">Email</p>
                   <p>{order.email}</p>
+                </div>
+                <div className="text-md font-medium">
+                  <p className="text-sm text-secondary">Điện thoại</p>
+                  <p>{order.phone}</p>
                 </div>
               </div>
               <div className="bg-white shadow rounded-xl p-4 flex flex-col gap-2">

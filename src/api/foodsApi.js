@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient";
 const foodsApi = {
   getFoods(signal) {
-    return axiosClient.get("/foods/foodsAdmin", { signal });
+    return axiosClient.get("/foods/", { signal });
   },
   getFood(foodId, signal) {
     return axiosClient.get(`/foods/${foodId}`, { signal });
