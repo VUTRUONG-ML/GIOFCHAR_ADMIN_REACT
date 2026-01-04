@@ -105,7 +105,7 @@ export default function Products() {
                     <tr className="border-b border-gray-200">
                       <th className="w-[40%] py-2">Sản phẩm</th>
                       <th className="w-[10%]">Danh mục</th>
-                      <th className="w-[10%]">Giá</th>
+                      <th className="w-[10%]">Giá bán</th>
                       <th className="w-[10%]">Tồn kho</th>
                       <th className="w-[20%]">Trạng thái</th>
                       <th className="w-[10%]">Thao tác</th>

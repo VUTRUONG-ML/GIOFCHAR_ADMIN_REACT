@@ -20,7 +20,7 @@ export default function CreateProduct() {
   const [food, setFood] = useState({
     foodName: "",
     foodDescription: "",
-    price: "",
+    originalPrice: "",
     discount: 0,
     rating: 0,
     stock: "",
@@ -170,14 +170,17 @@ export default function CreateProduct() {
             </div>
           </div>
           <div className="flex items-center w-full gap-2">
-            {/* price */}
+            {/* originalPrice */}
             <div className="flex-1 flex flex-col items-start gap-2">
               <InputCreate
                 label={`Giá (${VND})`}
                 placeHolder={"0"}
-                value={food.price}
+                value={food.originalPrice}
                 onChange={(e) =>
-                  setFood((prev) => ({ ...prev, price: e.target.value }))
+                  setFood((prev) => ({
+                    ...prev,
+                    originalPrice: e.target.value,
+                  }))
                 }
               />
             </div>

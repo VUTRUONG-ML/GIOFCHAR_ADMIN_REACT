@@ -181,11 +181,14 @@ export default function UpdateProduct() {
             {/* price */}
             <div className="flex-1 flex flex-col items-start gap-2">
               <InputCreate
-                label={`Giá (${VND})`}
+                label={`Giá gốc (${VND})`}
                 placeHolder={"0"}
-                value={food.price}
+                value={food.originalPrice}
                 onChange={(e) =>
-                  setFood((prev) => ({ ...prev, price: e.target.value }))
+                  setFood((prev) => ({
+                    ...prev,
+                    originalPrice: e.target.value,
+                  }))
                 }
               />
             </div>

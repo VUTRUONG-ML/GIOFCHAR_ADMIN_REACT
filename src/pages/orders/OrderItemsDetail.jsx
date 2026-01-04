@@ -14,7 +14,7 @@ export function OrderItemsDetail({ order }) {
           <div className="flex items-center gap-3" key={orderItem.orderItemId}>
             <div>
               <img
-                src={productPicture}
+                src={orderItem.image}
                 alt=""
                 className="w-13 h-13 object-cover rounded-lg"
               />
