@@ -222,6 +222,20 @@ export default function UpdateProduct() {
               }}
             />
           </div>
+          {/* discount */}
+          <div>
+            <InputCreate
+              label={`Giảm giá %`}
+              placeHolder={"0"}
+              value={food.discount}
+              onChange={(e) =>
+                setFood((prev) => ({
+                  ...prev,
+                  discount: e.target.value,
+                }))
+              }
+            />
+          </div>
           {/* active */}
           <div className="flex flex-col items-start gap-2">
             <label htmlFor="" className="text-sm font-bold">
