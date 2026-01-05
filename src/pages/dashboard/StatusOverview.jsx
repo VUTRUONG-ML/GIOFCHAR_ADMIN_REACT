@@ -1,12 +1,7 @@
 import NorthOutlinedIcon from "@mui/icons-material/NorthOutlined";
 import SouthOutlinedIcon from "@mui/icons-material/SouthOutlined";
-export function StatusOverview({
-  title,
-  content,
-  statusIncrease,
-  contentStatus,
-  icon,
-}) {
+import HorizontalRuleRoundedIcon from "@mui/icons-material/HorizontalRuleRounded";
+export function StatusOverview({ title, content, trend, contentStatus, icon }) {
   return (
     <div className="flex-1 bg-white rounded-xl shadow flex items-start py-8 px-4">
       <div className="flex-3 h-full flex flex-col justify-around">
@@ -15,15 +10,21 @@ export function StatusOverview({
         {/* status */}
         <div
           className={`flex items-center text-[14px] ${
-            statusIncrease ? "text-primary" : "text-red-700"
+            trend === "increase"
+              ? "text-primary"
+              : trend === "decrease"
+              ? "text-red-700"
+              : "text-gray-500"
           } font-medium`}
         >
-          {statusIncrease === undefined ? (
-            ""
-          ) : statusIncrease ? (
+          {trend === "increase" ? (
             <NorthOutlinedIcon />
-          ) : (
+          ) : trend === "decrease" ? (
             <SouthOutlinedIcon />
+          ) : trend === "no_change" ? (
+            <HorizontalRuleRoundedIcon />
+          ) : (
+            ""
           )}
           <p>{contentStatus}</p>
         </div>

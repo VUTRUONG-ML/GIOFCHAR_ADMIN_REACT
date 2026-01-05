@@ -22,7 +22,7 @@ export default function Login() {
     }
   };
   return (
-    <div className="flex items-center justify-center bg-primary w-full min-h-full">
+    <div className="flex items-center justify-center bg-gradient-to-b from-[#E8F5E8] via-[#F1F8E9] to-[#E8F5E8]">
       {/* form */}
       <div className="bg-white h-150 w-120 my-23 flex-col justify-center font-roboto px-10 py-13 shadow-md">
         {/* title */}

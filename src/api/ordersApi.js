@@ -9,6 +9,12 @@ const ordersApi = {
   updateOrderStatus(orderId, statusData) {
     return axiosClient.put(`/orders/${orderId}/status`, statusData);
   },
+  getOverviewCount(signal) {
+    return axiosClient.get("/orders/stats/overviewCount", { signal });
+  },
+  getOverviewRevenue(signal) {
+    return axiosClient.get("/orders/stats/overviewRevenue", { signal });
+  },
 };
 
 export default ordersApi;

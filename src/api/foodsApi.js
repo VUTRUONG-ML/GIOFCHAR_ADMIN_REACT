@@ -23,6 +23,9 @@ const foodsApi = {
   deleteFood(foodId) {
     return axiosClient.delete(`/foods/${foodId}`);
   },
+  getBestSelling(signal) {
+    return axiosClient.get("/foods/best-selling", { signal });
+  },
 };
 
 export default foodsApi;

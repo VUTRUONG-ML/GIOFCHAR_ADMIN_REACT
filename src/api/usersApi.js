@@ -6,6 +6,9 @@ const usersApi = {
   updateActiveUser(active, userId) {
     return axiosClient.put(`/users/${userId}`, active);
   },
+  getOverView(signal) {
+    return axiosClient.get("/users/stats/overviewCount", { signal });
+  },
 };
 
 export default usersApi;

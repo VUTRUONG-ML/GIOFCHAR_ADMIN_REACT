@@ -1,5 +1,4 @@
 import { formatMoney } from "../../utils/formatMoney";
-import productPicture from "../../assets/product-template.jpg";
 import { OrderStatus } from "./OrderStatus";
 
 export function OrderItemsDetail({ order }) {
