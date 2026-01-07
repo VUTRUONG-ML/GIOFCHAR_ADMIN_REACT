@@ -10,11 +10,13 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "react-toastify";
 import usersApi from "../../api/usersApi";
 import foodsApi from "../../api/foodsApi";
+import statistic from "../../api/statisticApi";
 
 export default function DashBoard() {
   const [range, setRange] = useState(7);
 
   const [loadingPage, setLoadingPage] = useState(true);
+  const [loadingChart, setLoadingChart] = useState(true);
 
   const [countOrder, setCountOrder] = useState({
     countTodayOrders: 0,
@@ -35,6 +37,13 @@ export default function DashBoard() {
   });
 
   const [bestSell, setBestSell] = useState("Giò lụa");
+
+  const [revenue7days, setRevenue7days] = useState([]);
+  const [dataChart, setDataChart] = useState({
+    revenue7days: [],
+    revenue30days: [],
+    revenue90days: [],
+  });
 
   const recentOrders = [
     {
@@ -81,8 +90,6 @@ export default function DashBoard() {
           usersApi.getOverView(controller.signal),
           foodsApi.getBestSelling(controller.signal),
         ]);
-        console.log(">>> check:", countRes);
-        console.log(">>> check:", revenueRes);
         setCountOrder({
           countTodayOrders: countRes.data?.countTodayOrders ?? 0,
           status: countRes.data?.status ?? "no_change",
@@ -109,6 +116,37 @@ export default function DashBoard() {
     loadData();
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoadingChart(true);
+
+    const loadRevenueChart = async () => {
+      try {
+        const res = await statistic.getRevenue(
+          Number(range),
+          controller.signal
+        );
+        const revenueRes = res.data?.revenue;
+        setDataChart((data) => {
+          return range === 7
+            ? { ...data, revenue7days: revenueRes }
+            : range === 30
+            ? { ...data, revenue30days: revenueRes }
+            : { ...data, revenue90days: revenueRes };
+        });
+        setRevenue7days(res.data?.revenue ?? []);
+      } catch (error) {
+        if (error.name === "CanceledError") return;
+        toast.warn("Không thể tải dữ liệu biểu đồ");
+      } finally {
+        setLoadingChart(false);
+      }
+    };
+
+    loadRevenueChart();
+    return () => controller.abort();
+  }, [range]);
 
   if (loadingPage) return <LoadingSpinner />;
   return (
@@ -156,7 +194,7 @@ export default function DashBoard() {
             <select
               className="border border-gray-200 rounded-lg text-sm px-3 py-1 bg-gray-50 hover:bg-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all cursor-pointer"
               value={range}
-              onChange={(e) => setRange(e.target.value)}
+              onChange={(e) => setRange(Number(e.target.value))}
             >
               <option value="7">7 ngày qua</option>
               <option value="30">30 ngày qua</option>
@@ -167,7 +205,10 @@ export default function DashBoard() {
           {/* QUAN TRỌNG: Wrapper này khóa chiều cao lại, ép chart phải nằm gọn bên trong */}
           <div className="flex-1 w-full min-h-0 relative overflow-hidden">
             {/* Nếu biểu đồ vẫn tràn, có thể thêm style={{ height: '100%', width: '100%' }} vào đây */}
-            <RevenueChart range={range} />
+            <RevenueChart
+              range={range}
+              data={dataChart[`revenue${range}days`]}
+            />
           </div>
         </div>
 
