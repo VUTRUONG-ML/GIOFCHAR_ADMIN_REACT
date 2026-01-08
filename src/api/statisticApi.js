@@ -6,6 +6,9 @@ const statistic = {
   getRecentOrders(signal) {
     return axiosClient.get(`/statistic/recent-orders`, { signal });
   },
+  getLowStockProduct(signal) {
+    return axiosClient.get(`/statistic/low-stock`, { signal });
+  },
 };
 
 export default statistic;

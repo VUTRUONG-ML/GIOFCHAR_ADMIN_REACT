@@ -12,6 +12,7 @@ import usersApi from "../../api/usersApi";
 import foodsApi from "../../api/foodsApi";
 import statistic from "../../api/statisticApi";
 import { RecentOrders } from "./RecentOrders";
+import { WarningStock } from "./WarningStock";
 
 export default function DashBoard() {
   const [range, setRange] = useState(7);
@@ -54,26 +55,35 @@ export default function DashBoard() {
     },
   ]);
 
-  const warningStock = [
-    { name: "Giò lụa đặc biệt", stock: 12, unit: "kg", alert: "low" },
-    { name: "Chả quế Hà Nội", stock: 8, unit: "kg", alert: "critical" },
-    { name: "Nem chua Thanh Hóa", stock: 15, unit: "kg", alert: "low" },
-    { name: "Giò thủ truyền thống", stock: 5, unit: "kg", alert: "critical" },
-  ];
+  const [warningStock, setWarningStock] = useState([
+    {
+      foodId: "start",
+      foodName: "Món",
+      stock: 0,
+      status: "low",
+    },
+  ]);
 
   useEffect(() => {
     const controller = new AbortController();
     const loadData = async () => {
       setLoadingPage(true);
       try {
-        const [countRes, revenueRes, userRes, foodRes, recentOrderRes] =
-          await Promise.all([
-            ordersApi.getOverviewCount(controller.signal),
-            ordersApi.getOverviewRevenue(controller.signal),
-            usersApi.getOverView(controller.signal),
-            foodsApi.getBestSelling(controller.signal),
-            statistic.getRecentOrders(controller.signal),
-          ]);
+        const [
+          countRes,
+          revenueRes,
+          userRes,
+          foodRes,
+          recentOrderRes,
+          warningStockRes,
+        ] = await Promise.all([
+          ordersApi.getOverviewCount(controller.signal),
+          ordersApi.getOverviewRevenue(controller.signal),
+          usersApi.getOverView(controller.signal),
+          foodsApi.getBestSelling(controller.signal),
+          statistic.getRecentOrders(controller.signal),
+          statistic.getLowStockProduct(controller.signal),
+        ]);
         setCountOrder({
           countTodayOrders: countRes.data?.countTodayOrders ?? 0,
           status: countRes.data?.status ?? "no_change",
@@ -91,6 +101,7 @@ export default function DashBoard() {
         });
         setBestSell(foodRes.data?.foods[0]?.foodName ?? "Giò");
         setRecentOrders(recentOrderRes.data?.orders ?? []);
+        setWarningStock(warningStockRes.data?.products ?? []);
       } catch (error) {
         if (error.name === "CanceledError") return;
         toast.warn("Đã có lỗi xảy ra");
@@ -233,37 +244,7 @@ export default function DashBoard() {
         <RecentOrders recentOrders={recentOrders} />
 
         {/* Tồn kho cảnh báo */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-gray-800">
-              Tồn kho cảnh báo
-            </h3>
-          </div>
-          <div className="space-y-4">
-            {warningStock.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between pb-4 border-b border-gray-50 last:border-0 last:pb-0"
-              >
-                <div>
-                  <p className="font-bold text-gray-800">{item.name}</p>
-                  <p className="text-sm text-gray-500 mt-0.5">
-                    Còn lại: {item.stock} {item.unit}
-                  </p>
-                </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-bold ${
-                    item.alert === "critical"
-                      ? "bg-red-100 text-red-600"
-                      : "bg-orange-100 text-orange-600"
-                  }`}
-                >
-                  {item.alert === "critical" ? "Rất thấp" : "Thấp"}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <WarningStock warningStock={warningStock} />
       </div>
     </div>
   );
