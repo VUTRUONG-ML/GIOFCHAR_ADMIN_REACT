@@ -4,19 +4,19 @@ import { VND } from "../../constants/currency";
 import RevenueChart from "./charts/RevenueChart";
 import { useEffect, useState } from "react";
 import BestSellingChart from "./charts/BestSellingChart";
-import { formatVNDShort } from "../../utils/formatMoney";
+import { formatMoney, formatVNDShort } from "../../utils/formatMoney";
 import ordersApi from "../../api/ordersApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "react-toastify";
 import usersApi from "../../api/usersApi";
 import foodsApi from "../../api/foodsApi";
 import statistic from "../../api/statisticApi";
+import { RecentOrders } from "./RecentOrders";
 
 export default function DashBoard() {
   const [range, setRange] = useState(7);
 
   const [loadingPage, setLoadingPage] = useState(true);
-  const [loadingChart, setLoadingChart] = useState(true);
 
   const [countOrder, setCountOrder] = useState({
     countTodayOrders: 0,
@@ -38,39 +38,21 @@ export default function DashBoard() {
 
   const [bestSell, setBestSell] = useState("Giò lụa");
 
-  const [revenue7days, setRevenue7days] = useState([]);
   const [dataChart, setDataChart] = useState({
     revenue7days: [],
     revenue30days: [],
     revenue90days: [],
   });
 
-  const recentOrders = [
+  const [recentOrders, setRecentOrders] = useState([
     {
-      id: "#DH2024-0891",
-      customer: "Nguyễn Văn A",
-      total: "285,000 ₫",
-      status: "Hoàn thành",
+      orderId: "start",
+      orderCode: "DH2025-000004",
+      status: "unconfirmed",
+      customerName: "Nguyễn Văn a",
+      amount: 0,
     },
-    {
-      id: "#DH2024-0890",
-      customer: "Trần Thị B",
-      total: "420,000 ₫",
-      status: "Đang xử lý",
-    },
-    {
-      id: "#DH2024-0889",
-      customer: "Lê Văn C",
-      total: "150,000 ₫",
-      status: "Chờ xác nhận",
-    },
-    {
-      id: "#DH2024-0888",
-      customer: "Phạm Thị D",
-      total: "680,000 ₫",
-      status: "Hoàn thành",
-    },
-  ];
+  ]);
 
   const warningStock = [
     { name: "Giò lụa đặc biệt", stock: 12, unit: "kg", alert: "low" },
@@ -84,12 +66,14 @@ export default function DashBoard() {
     const loadData = async () => {
       setLoadingPage(true);
       try {
-        const [countRes, revenueRes, userRes, foodRes] = await Promise.all([
-          ordersApi.getOverviewCount(controller.signal),
-          ordersApi.getOverviewRevenue(controller.signal),
-          usersApi.getOverView(controller.signal),
-          foodsApi.getBestSelling(controller.signal),
-        ]);
+        const [countRes, revenueRes, userRes, foodRes, recentOrderRes] =
+          await Promise.all([
+            ordersApi.getOverviewCount(controller.signal),
+            ordersApi.getOverviewRevenue(controller.signal),
+            usersApi.getOverView(controller.signal),
+            foodsApi.getBestSelling(controller.signal),
+            statistic.getRecentOrders(controller.signal),
+          ]);
         setCountOrder({
           countTodayOrders: countRes.data?.countTodayOrders ?? 0,
           status: countRes.data?.status ?? "no_change",
@@ -106,6 +90,7 @@ export default function DashBoard() {
           percent: userRes.data?.percent ?? 0,
         });
         setBestSell(foodRes.data?.foods[0]?.foodName ?? "Giò");
+        setRecentOrders(recentOrderRes.data?.orders ?? []);
       } catch (error) {
         if (error.name === "CanceledError") return;
         toast.warn("Đã có lỗi xảy ra");
@@ -119,8 +104,6 @@ export default function DashBoard() {
 
   useEffect(() => {
     const controller = new AbortController();
-    setLoadingChart(true);
-
     const loadRevenueChart = async () => {
       try {
         const res = await statistic.getRevenue(
@@ -135,12 +118,9 @@ export default function DashBoard() {
             ? { ...data, revenue30days: revenueRes }
             : { ...data, revenue90days: revenueRes };
         });
-        setRevenue7days(res.data?.revenue ?? []);
       } catch (error) {
         if (error.name === "CanceledError") return;
         toast.warn("Không thể tải dữ liệu biểu đồ");
-      } finally {
-        setLoadingChart(false);
       }
     };
 
@@ -250,42 +230,7 @@ export default function DashBoard() {
       {/* --- PHẦN 3: ĐƠN HÀNG & TỒN KHO --- */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Đơn hàng gần đây */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-gray-800">
-              Đơn hàng gần đây
-            </h3>
-          </div>
-          <div className="space-y-4">
-            {recentOrders.map((order, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between pb-4 border-b border-gray-50 last:border-0 last:pb-0"
-              >
-                <div>
-                  <p className="font-bold text-gray-800">{order.id}</p>
-                  <p className="text-sm text-gray-500 mt-0.5">
-                    {order.customer}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-gray-800">{order.total}</p>
-                  <span
-                    className={`inline-block mt-1 text-xs px-2.5 py-0.5 rounded-full font-medium ${
-                      order.status === "Hoàn thành"
-                        ? "bg-green-100 text-green-700"
-                        : order.status === "Đang xử lý"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <RecentOrders recentOrders={recentOrders} />
 
         {/* Tồn kho cảnh báo */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

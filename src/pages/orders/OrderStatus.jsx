@@ -6,22 +6,22 @@ export function OrderStatus({ status }) {
   const mapStatus = {
     delivered: {
       status: "Đã giao",
-      style: "bg-green-200 text-primary",
+      style: "status-delivered",
       icon: <DoneOutlinedIcon />,
     },
     delivering: {
       status: "Đang giao",
-      style: "bg-gray-200 text-gray-700",
+      style: "status-delivering",
       icon: <DeliveryDiningOutlinedIcon />,
     },
     unconfirmed: {
       status: "Chờ xác nhận",
-      style: "bg-amber-200 text-red-700",
+      style: "status-unconfirmed",
       icon: <MoreHorizOutlinedIcon />,
     },
     cancelled: {
       status: "Đã hủy",
-      style: "bg-red-300 text-red-700",
+      style: "status-cancelled",
       icon: <ClearOutlinedIcon />,
     },
   };

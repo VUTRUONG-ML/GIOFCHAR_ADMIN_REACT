@@ -52,3 +52,21 @@ body,
 .animate-dot-bounce {
   animation: dotBounce 0.8s infinite;
 }
+
+@layer components {
+  .status-delivered {
+    @apply bg-green-200 text-primary;
+  }
+
+  .status-delivering {
+    @apply bg-gray-200 text-gray-700;
+  }
+
+  .status-unconfirmed {
+    @apply bg-amber-200 text-red-700;
+  }
+
+  .status-cancelled {
+    @apply bg-red-300 text-red-700;
+  }
+}
