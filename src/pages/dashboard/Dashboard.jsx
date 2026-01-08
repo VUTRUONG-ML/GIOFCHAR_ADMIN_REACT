@@ -4,7 +4,7 @@ import { VND } from "../../constants/currency";
 import RevenueChart from "./charts/RevenueChart";
 import { useEffect, useState } from "react";
 import BestSellingChart from "./charts/BestSellingChart";
-import { formatMoney, formatVNDShort } from "../../utils/formatMoney";
+import { formatVNDShort } from "../../utils/formatMoney";
 import ordersApi from "../../api/ordersApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "react-toastify";

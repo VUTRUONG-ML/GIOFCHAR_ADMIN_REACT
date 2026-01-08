@@ -9,6 +9,9 @@ const statistic = {
   getLowStockProduct(signal) {
     return axiosClient.get(`/statistic/low-stock`, { signal });
   },
+  getTopProduct(signal) {
+    return axiosClient.get(`/statistic/top-products`, { signal });
+  },
 };
 
 export default statistic;
