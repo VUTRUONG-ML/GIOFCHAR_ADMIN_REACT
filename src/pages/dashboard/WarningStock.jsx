@@ -1,5 +1,4 @@
 export function WarningStock({ warningStock }) {
-  console.log(">>> res:", warningStock);
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-6">
@@ -13,9 +12,16 @@ export function WarningStock({ warningStock }) {
           >
             <div>
               <p className="font-bold text-gray-800">{item.foodName}</p>
-              <p className="text-sm text-gray-500 mt-0.5">
-                Còn lại: {item.stock} kg
-              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-sm text-gray-500">
+                  Còn lại: {item.stock} phần
+                </p>
+
+                {/* weight_gram badge */}
+                <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-600">
+                  {item.weight_gram}g / phần
+                </span>
+              </div>
             </div>
             <span
               className={`px-3 py-1 rounded-full text-xs font-bold ${
