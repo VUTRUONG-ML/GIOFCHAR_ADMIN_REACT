@@ -14,6 +14,7 @@ import PublicRoute from "./PublicRoute";
 import CreateProduct from "../pages/products/CreateProduct";
 import UpdateProduct from "../pages/products/UpdateProduct";
 import NavigatorInit from "../utils/NavigatorInit";
+import Promotions from "../pages/promotion/Promotions";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -70,6 +71,11 @@ export const router = createBrowserRouter([
             path: "categories",
             Component: Categories,
             handle: { title: "Quản lý danh mục" },
+          },
+          {
+            path: "promotions",
+            Component: Promotions,
+            handle: { title: "Quản lý khuyến mãi" },
           },
           {
             path: "my",

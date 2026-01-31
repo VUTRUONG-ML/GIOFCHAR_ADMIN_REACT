@@ -1,28 +1,32 @@
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
+import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import { formatMoney } from "../../utils/formatMoney";
 const mockVariants = [
   {
-    id: 1,
-    name: "Nhỏ",
-    price: 50000,
-    finalPrice: 40000,
-    promotionApplied: true,
-    discountLabel: "-20%",
+    variantId: 1,
+    originalPrice: 50000,
+    price: 40000,
+    promotionType: "PERCENT",
+    promotionValue: 12,
     stock: 12,
     weight_gram: 200,
-    warning: "ok",
   },
   {
-    id: 2,
-    name: "Lớn",
-    price: 70000,
-    finalPrice: 70000,
-    promotionApplied: false,
-    discountLabel: null,
+    variantId: 2,
+    originalPrice: 70000,
+    price: 60000,
+    promotionType: "FIXED",
+    promotionValue: 10000,
     stock: 2,
     weight_gram: 350,
-    warning: "low",
   },
 ];
+
+function getLabelDiscount(promotionType, promotionValue) {
+  if (promotionType === "FIXED") return formatMoney(promotionValue);
+  return `${promotionValue}%`;
+}
 
 export function VariantDrawer({ open, onClose, productName }) {
   if (!open) return null;
@@ -56,39 +60,41 @@ export function VariantDrawer({ open, onClose, productName }) {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {mockVariants.map((variant) => (
+          {mockVariants.map((variant, index) => (
             <div
-              key={variant.id}
+              key={index}
               className="bg-white rounded-xl p-4 shadow-sm border border-gray-100"
             >
               {/* Top */}
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-semibold text-secondary">{variant.name}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-semibold text-secondary">
                     {variant.weight_gram}g / phần
                   </p>
                 </div>
 
-                {variant.promotionApplied && (
+                {variant.promotionType && (
                   <span
                     className="text-xs font-bold px-2 py-0.5 rounded-full
                     bg-secondary-orange text-white"
                   >
-                    {variant.discountLabel}
+                    {getLabelDiscount(
+                      variant.promotionType,
+                      variant.promotionValue,
+                    )}
                   </span>
                 )}
               </div>
 
               {/* Price */}
               <div className="mt-2">
-                {variant.promotionApplied && (
+                {variant.promotionType && (
                   <p className="text-sm text-gray-400 line-through">
-                    {variant.price.toLocaleString()} đ
+                    {formatMoney(variant.originalPrice)}
                   </p>
                 )}
                 <p className="text-lg font-bold text-primary">
-                  {variant.finalPrice.toLocaleString()} đ
+                  {formatMoney(variant.price)}
                 </p>
               </div>
 
@@ -98,17 +104,14 @@ export function VariantDrawer({ open, onClose, productName }) {
                   Kho:{" "}
                   <span className="font-semibold">{variant.stock} phần</span>
                 </div>
-
-                <span
-                  className={`text-xs px-3 py-1 rounded-full font-medium
-                    ${
-                      variant.warning === "low"
-                        ? "bg-red-200 text-red-700"
-                        : "bg-green-200 text-primary"
-                    }`}
-                >
-                  {variant.warning === "low" ? "Sắp hết" : "Ổn định"}
-                </span>
+                <div>
+                  <button>
+                    <AppRegistrationOutlinedIcon className="text-blue-800 cursor-pointer active:scale-95" />
+                  </button>
+                  <button>
+                    <DeleteForeverOutlinedIcon className="text-red-800 cursor-pointer active:scale-95" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -120,7 +123,7 @@ export function VariantDrawer({ open, onClose, productName }) {
             className="w-full py-2 rounded-xl bg-primary text-white font-semibold
               hover:bg-primary-md transition"
           >
-            Mở trang quản lý chi tiết
+            Thêm loại sản phẩm
           </button>
         </div>
       </div>

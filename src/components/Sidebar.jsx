@@ -6,6 +6,7 @@ import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import DiscountOutlinedIcon from "@mui/icons-material/DiscountOutlined";
 import { Menu } from "./Menu";
 import { useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
@@ -49,6 +50,7 @@ export default function Sidebar() {
         <Menu title="Đơn hàng" icon={ShoppingCartOutlinedIcon} to="orders" />
         <Menu title="Khách hàng" icon={GroupOutlinedIcon} to="users" />
         <Menu title="Danh mục" icon={CategoryOutlinedIcon} to="categories" />
+        <Menu title="Khuyến mãi" icon={DiscountOutlinedIcon} to="promotions" />
         <Menu title="Tài khoản" icon={AccountCircleOutlinedIcon} to="my" />
       </div>
       {/* logout */}
