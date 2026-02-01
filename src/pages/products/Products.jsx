@@ -23,6 +23,10 @@ export default function Products() {
   const [quantity, setQuantity] = useState(0);
   const [loadingFoods, setLoadingFoods] = useState(true);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [foodVariant, setFoodVariant] = useState({
+    foodId: 1,
+    foodName: "Xúc xích",
+  });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,6 +73,10 @@ export default function Products() {
   const handleMove = () => navigate("/admin/products/create");
   const updateProduct = (foodId) => {
     navigate(`/admin/products/update/${foodId}`);
+  };
+  const handleOpenDraw = (foodId, foodName) => {
+    setOpenDrawer(true);
+    setFoodVariant({ foodId, foodName });
   };
 
   return (
@@ -198,7 +206,9 @@ export default function Products() {
                             <td>
                               <div className="flex items-center gap-3">
                                 <button
-                                  onClick={() => setOpenDrawer(true)}
+                                  onClick={() =>
+                                    handleOpenDraw(food.foodId, food.foodName)
+                                  }
                                   title="Quản lý variant"
                                   className="text-gray-700 hover:text-primary cursor-pointer active:scale-95"
                                 >
@@ -228,7 +238,8 @@ export default function Products() {
           <VariantDrawer
             open={openDrawer}
             onClose={() => setOpenDrawer(false)}
-            productName="Bò lúc lắc"
+            foodName={foodVariant.foodName}
+            foodId={foodVariant.foodId}
           />
         </>
       )}

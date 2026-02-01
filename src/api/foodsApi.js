@@ -1,3 +1,4 @@
+import { mapVariants } from "../mappers/variants";
 import axiosClient from "./axiosClient";
 const foodsApi = {
   getFoods(signal) {
@@ -25,6 +26,9 @@ const foodsApi = {
   },
   getBestSelling(signal) {
     return axiosClient.get("/foods/best-selling", { signal });
+  },
+  getVariantsOfFood(foodId, signal) {
+    return axiosClient.get(`/foods/${foodId}/variants`, { signal });
   },
 };
 

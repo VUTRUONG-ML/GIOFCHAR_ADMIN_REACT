@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useConfirm } from "../../contexts/ConfirmContext";
 import { useLoader } from "../../contexts/LoaderContext";
+import RunningWithErrorsRoundedIcon from "@mui/icons-material/RunningWithErrorsRounded";
+import MoreTimeRoundedIcon from "@mui/icons-material/MoreTimeRounded";
 
 const MOCK_PROMOTIONS = [
   {
@@ -15,6 +17,7 @@ const MOCK_PROMOTIONS = [
     value: 20,
     start_at: "2024-10-01",
     end_at: "2024-10-31",
+    expired: false,
     isActive: true,
   },
   {
@@ -24,6 +27,17 @@ const MOCK_PROMOTIONS = [
     value: 50000,
     start_at: "2024-11-01",
     end_at: "2024-11-30",
+    expired: false,
+    isActive: false,
+  },
+  {
+    promotionId: 2,
+    name: "Ưu đãi cuối tuần",
+    type: "FIXED",
+    value: 50000,
+    start_at: "2024-11-01",
+    end_at: "2024-11-30",
+    expired: true,
     isActive: false,
   },
 ];
@@ -124,7 +138,12 @@ export default function Promotions() {
                           {promo.end_at}
                         </td>
                         <td>
-                          {promo.isActive ? (
+                          {promo.expired ? (
+                            <div className="flex bg-secondary-orange items-center gap-1 text-white py-1 px-2 rounded-2xl text-[10px]">
+                              <RunningWithErrorsRoundedIcon />
+                              <p>Đã hết hạn</p>
+                            </div>
+                          ) : promo.isActive ? (
                             <div className="flex bg-green-200 items-center gap-1 text-primary py-1 px-2 rounded-2xl text-[10px]">
                               <CheckCircleOutlineOutlinedIcon />
                               <p>Đang áp dụng</p>
@@ -138,7 +157,11 @@ export default function Promotions() {
                         </td>
                         <td>
                           <div className="flex justify-center">
-                            {promo.isActive ? (
+                            {promo.expired ? (
+                              <button className="bg-blue-500 text-amber-100 text-[14px] px-2 py-1 rounded-md active:scale-95 cursor-pointer">
+                                <MoreTimeRoundedIcon />
+                              </button>
+                            ) : promo.isActive ? (
                               <button
                                 className="bg-red-300 text-red-700 text-[14px] px-2 py-1 rounded-md active:scale-95 cursor-pointer"
                                 onClick={() =>
