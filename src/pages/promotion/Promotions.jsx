@@ -8,37 +8,87 @@ import { useConfirm } from "../../contexts/ConfirmContext";
 import { useLoader } from "../../contexts/LoaderContext";
 import RunningWithErrorsRoundedIcon from "@mui/icons-material/RunningWithErrorsRounded";
 import MoreTimeRoundedIcon from "@mui/icons-material/MoreTimeRounded";
+import promoApi from "../../api/promotionApi";
 
 const MOCK_PROMOTIONS = [
   {
     promotionId: 1,
     name: "Giảm giá khai trương",
-    type: "PERCENT", // PERCENT | FIXED
+    type: "PERCENT",
     value: 20,
-    start_at: "2024-10-01",
-    end_at: "2024-10-31",
-    expired: false,
+    start_at: "2026-03-01",
+    end_at: "2026-03-31",
+    status: "UPCOMING",
+  },
+  {
+    promotionId: 2,
+    name: "Ưu đãi Valentine",
+    type: "FIXED",
+    value: 50000,
+    start_at: "2026-02-10",
+    end_at: "2026-02-14",
+    status: "UPCOMING",
+  },
+
+  {
+    promotionId: 3,
+    name: "Flash Sale đầu tháng",
+    type: "PERCENT",
+    value: 15,
+    start_at: "2026-02-01",
+    end_at: "2026-02-05",
+    status: "ACTIVE",
     isActive: true,
   },
   {
-    promotionId: 2,
-    name: "Ưu đãi cuối tuần",
+    promotionId: 4,
+    name: "Ưu đãi thành viên VIP",
     type: "FIXED",
-    value: 50000,
-    start_at: "2024-11-01",
-    end_at: "2024-11-30",
-    expired: false,
+    value: 100000,
+    start_at: "2026-01-15",
+    end_at: "2026-02-28",
+    status: "ACTIVE",
     isActive: false,
   },
+
   {
-    promotionId: 2,
-    name: "Ưu đãi cuối tuần",
+    promotionId: 5,
+    name: "Sale Tết Nguyên Đán",
+    type: "PERCENT",
+    value: 30,
+    start_at: "2026-01-15",
+    end_at: "2026-01-31",
+    status: "EXPIRED",
+  },
+  {
+    promotionId: 6,
+    name: "Ưu đãi cuối năm",
     type: "FIXED",
-    value: 50000,
-    start_at: "2024-11-01",
-    end_at: "2024-11-30",
-    expired: true,
-    isActive: false,
+    value: 70000,
+    start_at: "2025-12-01",
+    end_at: "2025-12-31",
+    status: "EXPIRED",
+  },
+
+  {
+    promotionId: 7,
+    name: "Kết thúc hôm nay",
+    type: "PERCENT",
+    value: 10,
+    start_at: "2026-01-20",
+    end_at: "2026-02-02",
+    status: "ACTIVE",
+    isActive: true,
+  },
+  {
+    promotionId: 8,
+    name: "Bắt đầu hôm nay",
+    type: "FIXED",
+    value: 30000,
+    start_at: "2026-02-02",
+    end_at: "2026-02-10",
+    status: "ACTIVE",
+    isActive: true,
   },
 ];
 
@@ -50,28 +100,40 @@ export default function Promotions() {
   const [loadingPage, setLoadingPage] = useState(true);
 
   useEffect(() => {
-    // mock loading
-    setTimeout(() => {
-      setPromotions(MOCK_PROMOTIONS);
-      setLoadingPage(false);
-    }, 500);
+    const controller = new AbortController();
+    const loadingPromotions = async () => {
+      try {
+        const res = await promoApi.getPromotions(controller.signal);
+        setPromotions(res.data);
+      } catch (error) {
+        if (error.name === "CanceledError") return;
+        toast.warn("Đã có lỗi xảy ra");
+      } finally {
+        setLoadingPage(false);
+      }
+    };
+    loadingPromotions();
+    return () => controller.abort();
   }, []);
 
-  const toggleActive = async (isActive, promotionId) => {
+  const toggleActive = async (promo) => {
+    const nextActive = !promo.isActive;
+
     const ok = await confirm({
       title: "Xác nhận thay đổi?",
       message: `Bạn có chắc chắn muốn ${
-        isActive ? "hiển thị" : "ẩn"
+        nextActive ? "hiển thị" : "ẩn"
       } promotion này?`,
     });
     if (!ok) return;
 
     setLoading(true);
     try {
-      // mock update
       setPromotions((prev) =>
         prev.map((item) =>
-          item.promotionId === promotionId ? { ...item, isActive } : item,
+          item.promotionId === promo.promotionId
+            ? { ...item, isActive: nextActive }
+            : item,
         ),
       );
       toast.success("Cập nhật promotion thành công");
@@ -83,6 +145,81 @@ export default function Promotions() {
   const renderValue = (type, value) => {
     if (type === "PERCENT") return `Giảm ${value}%`;
     return `Giảm ${value.toLocaleString()}đ`;
+  };
+
+  const renderStatus = (promo) => {
+    switch (promo.status) {
+      case "UPCOMING":
+        return (
+          <div className="flex bg-blue-200 text-blue-700 items-center gap-1 py-1 px-2 rounded-2xl text-[10px]">
+            <MoreTimeRoundedIcon />
+            <p>Chưa tới hạn</p>
+          </div>
+        );
+      case "ACTIVE":
+        return (
+          <div
+            className={`flex items-center gap-1 py-1 px-2 rounded-2xl text-[10px]
+        ${
+          promo.isActive
+            ? "bg-green-200 text-primary"
+            : "bg-gray-300 text-gray-600"
+        }`}
+          >
+            {promo.isActive ? (
+              <CheckCircleOutlineOutlinedIcon />
+            ) : (
+              <DoDisturbOutlinedIcon />
+            )}
+            <p>{promo.isActive ? "Đang áp dụng" : "Đã tắt"}</p>
+          </div>
+        );
+
+      case "EXPIRED":
+        return (
+          <div className="flex bg-secondary-orange text-white items-center gap-1 py-1 px-2 rounded-2xl text-[10px]">
+            <RunningWithErrorsRoundedIcon />
+            <p>Đã hết hạn</p>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderAction = (status, promo) => {
+    switch (status) {
+      case "UPCOMING":
+        return (
+          <button className="bg-blue-200 px-2 py-1 rounded-md text-[14px] cursor-pointer active:scale-95">
+            Sửa
+          </button>
+        );
+
+      case "ACTIVE":
+        return (
+          <button
+            className={`px-2 py-1 rounded-md text-[14px] cursor-pointer active:scale-95 ${
+              promo.isActive
+                ? "bg-red-200 text-red-700"
+                : "bg-green-200 text-primary"
+            }`}
+            onClick={() => toggleActive(promo)}
+          >
+            {promo.isActive ? "Ẩn" : "Hiện"}
+          </button>
+        );
+
+      case "EXPIRED":
+        return (
+          <button className="bg-green-200 text-primary px-2 py-1 rounded-md cursor-pointer active:scale-95">
+            Duplicate
+          </button>
+        );
+
+      default:
+        return null;
+    }
   };
 
   return (
@@ -137,49 +274,10 @@ export default function Promotions() {
                         <td className="text-secondary text-sm">
                           {promo.end_at}
                         </td>
-                        <td>
-                          {promo.expired ? (
-                            <div className="flex bg-secondary-orange items-center gap-1 text-white py-1 px-2 rounded-2xl text-[10px]">
-                              <RunningWithErrorsRoundedIcon />
-                              <p>Đã hết hạn</p>
-                            </div>
-                          ) : promo.isActive ? (
-                            <div className="flex bg-green-200 items-center gap-1 text-primary py-1 px-2 rounded-2xl text-[10px]">
-                              <CheckCircleOutlineOutlinedIcon />
-                              <p>Đang áp dụng</p>
-                            </div>
-                          ) : (
-                            <div className="flex bg-red-300 text-red-700 items-center gap-1 py-1 px-2 rounded-2xl text-[10px]">
-                              <DoDisturbOutlinedIcon />
-                              <p>Đã ẩn</p>
-                            </div>
-                          )}
-                        </td>
+                        <td>{renderStatus(promo)}</td>
                         <td>
                           <div className="flex justify-center">
-                            {promo.expired ? (
-                              <button className="bg-blue-500 text-amber-100 text-[14px] px-2 py-1 rounded-md active:scale-95 cursor-pointer">
-                                <MoreTimeRoundedIcon />
-                              </button>
-                            ) : promo.isActive ? (
-                              <button
-                                className="bg-red-300 text-red-700 text-[14px] px-2 py-1 rounded-md active:scale-95 cursor-pointer"
-                                onClick={() =>
-                                  toggleActive(false, promo.promotionId)
-                                }
-                              >
-                                Ẩn
-                              </button>
-                            ) : (
-                              <button
-                                className="bg-green-200 text-primary text-[14px] px-2 py-1 rounded-md active:scale-95 cursor-pointer"
-                                onClick={() =>
-                                  toggleActive(true, promo.promotionId)
-                                }
-                              >
-                                Hiện
-                              </button>
-                            )}
+                            {renderAction(promo.status, promo)}
                           </div>
                         </td>
                       </tr>
