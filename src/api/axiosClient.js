@@ -1,6 +1,5 @@
 import axios from "axios";
 
-import { toast } from "react-toastify";
 import { navigateTo } from "../utils/navigationService";
 import { authService } from "../utils/authService";
 
@@ -22,7 +21,7 @@ axiosClient.interceptors.request.use(
   function (error) {
     // Do something with request error
     return Promise.reject(error);
-  }
+  },
 );
 axiosClient.interceptors.response.use(
   (response) => response,
@@ -58,10 +57,9 @@ axiosClient.interceptors.response.use(
       default:
         console.warn("Error", message);
     }
-    toast.error(message);
-    // ui toast error
+
     // Nếu return error thì nó vào try lúc nhận response còn nếu throw thì vào catch
     throw error;
-  }
+  },
 );
 export default axiosClient;

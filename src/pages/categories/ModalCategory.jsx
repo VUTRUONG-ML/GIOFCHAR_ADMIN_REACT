@@ -11,11 +11,9 @@ export function ModelCategory({
 }) {
   const [categoryName, setCategoryName] = useState(initValue.categoryName);
   const [categoryDescription, setCategoryDescription] = useState(
-    initValue.categoryDescription
+    initValue.categoryDescription,
   );
   const handleSubmit = () => {
-    console.log("chec modal", categoryId, categoryName, categoryDescription);
-
     onSubmit({ categoryId, categoryName, categoryDescription });
   };
   return (

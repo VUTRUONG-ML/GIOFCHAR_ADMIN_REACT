@@ -129,6 +129,9 @@ export default function Promotions() {
 
     setLoading(true);
     try {
+      await promoApi.updateActivePromotion(promo.promotionId, {
+        isActive: nextActive,
+      });
       setPromotions((prev) =>
         prev.map((item) =>
           item.promotionId === promo.promotionId
@@ -137,6 +140,9 @@ export default function Promotions() {
         ),
       );
       toast.success("Cập nhật promotion thành công");
+    } catch (error) {
+      console.log(">>> error:", error);
+      toast.error("Đã có lỗi xảy ra!");
     } finally {
       setLoading(false);
     }
