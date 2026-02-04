@@ -1,5 +1,6 @@
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import DoDisturbOutlinedIcon from "@mui/icons-material/DoDisturbOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { SubTitle } from "../../components/SubTitle";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useEffect, useState } from "react";
@@ -9,88 +10,8 @@ import { useLoader } from "../../contexts/LoaderContext";
 import RunningWithErrorsRoundedIcon from "@mui/icons-material/RunningWithErrorsRounded";
 import MoreTimeRoundedIcon from "@mui/icons-material/MoreTimeRounded";
 import promoApi from "../../api/promotionApi";
-
-const MOCK_PROMOTIONS = [
-  {
-    promotionId: 1,
-    name: "Giảm giá khai trương",
-    type: "PERCENT",
-    value: 20,
-    start_at: "2026-03-01",
-    end_at: "2026-03-31",
-    status: "UPCOMING",
-  },
-  {
-    promotionId: 2,
-    name: "Ưu đãi Valentine",
-    type: "FIXED",
-    value: 50000,
-    start_at: "2026-02-10",
-    end_at: "2026-02-14",
-    status: "UPCOMING",
-  },
-
-  {
-    promotionId: 3,
-    name: "Flash Sale đầu tháng",
-    type: "PERCENT",
-    value: 15,
-    start_at: "2026-02-01",
-    end_at: "2026-02-05",
-    status: "ACTIVE",
-    isActive: true,
-  },
-  {
-    promotionId: 4,
-    name: "Ưu đãi thành viên VIP",
-    type: "FIXED",
-    value: 100000,
-    start_at: "2026-01-15",
-    end_at: "2026-02-28",
-    status: "ACTIVE",
-    isActive: false,
-  },
-
-  {
-    promotionId: 5,
-    name: "Sale Tết Nguyên Đán",
-    type: "PERCENT",
-    value: 30,
-    start_at: "2026-01-15",
-    end_at: "2026-01-31",
-    status: "EXPIRED",
-  },
-  {
-    promotionId: 6,
-    name: "Ưu đãi cuối năm",
-    type: "FIXED",
-    value: 70000,
-    start_at: "2025-12-01",
-    end_at: "2025-12-31",
-    status: "EXPIRED",
-  },
-
-  {
-    promotionId: 7,
-    name: "Kết thúc hôm nay",
-    type: "PERCENT",
-    value: 10,
-    start_at: "2026-01-20",
-    end_at: "2026-02-02",
-    status: "ACTIVE",
-    isActive: true,
-  },
-  {
-    promotionId: 8,
-    name: "Bắt đầu hôm nay",
-    type: "FIXED",
-    value: 30000,
-    start_at: "2026-02-02",
-    end_at: "2026-02-10",
-    status: "ACTIVE",
-    isActive: true,
-  },
-];
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import PromotionModal from "./PromotionModal";
 
 export default function Promotions() {
   const { confirm } = useConfirm();
@@ -98,6 +19,24 @@ export default function Promotions() {
 
   const [promotions, setPromotions] = useState([]);
   const [loadingPage, setLoadingPage] = useState(true);
+
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState("edit");
+  const [selectedPromotion, setSelectedPromotion] = useState(null);
+
+  // Edit
+  const handleEdit = (promotion) => {
+    setMode("edit");
+    setSelectedPromotion(promotion);
+    setOpen(true);
+  };
+
+  // Duplicate
+  const handleDuplicate = (promotion) => {
+    setMode("duplicate");
+    setSelectedPromotion(promotion);
+    setOpen(true);
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -197,8 +136,11 @@ export default function Promotions() {
     switch (status) {
       case "UPCOMING":
         return (
-          <button className="bg-blue-200 px-2 py-1 rounded-md text-[14px] cursor-pointer active:scale-95">
-            Sửa
+          <button
+            className="bg-blue-200 px-2 py-1 rounded-md text-[14px] cursor-pointer active:scale-95"
+            onClick={() => handleEdit(promo)}
+          >
+            <EditOutlinedIcon />
           </button>
         );
 
@@ -218,8 +160,11 @@ export default function Promotions() {
 
       case "EXPIRED":
         return (
-          <button className="bg-green-200 text-primary px-2 py-1 rounded-md cursor-pointer active:scale-95">
-            Duplicate
+          <button
+            className="bg-green-200 text-primary px-2 py-1 rounded-md cursor-pointer active:scale-95"
+            onClick={() => handleDuplicate(promo)}
+          >
+            <ContentCopyOutlinedIcon />
           </button>
         );
 
@@ -241,7 +186,6 @@ export default function Promotions() {
             active={true}
             nameActive={"Khuyến mãi"}
           />
-
           <div className="flex-1 bg-white shadow rounded-xl py-1 px-4">
             {!promotions.length ? (
               <div>Danh sách promotion rỗng</div>
@@ -293,6 +237,21 @@ export default function Promotions() {
               </div>
             )}
           </div>
+          <PromotionModal
+            open={open}
+            mode={mode}
+            initialData={selectedPromotion}
+            onClose={() => setOpen(false)}
+            onSubmit={(data) => {
+              if (mode === "edit") {
+                // PUT /promotions/:id
+              } else {
+                // POST /promotions
+              }
+              setOpen(false);
+            }}
+          />
+          ;
         </>
       )}
     </>

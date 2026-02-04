@@ -18,7 +18,7 @@ export function ModelCategory({
   };
   return (
     <div className=" fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-      <div className="flex w-[30%] flex-col gap-4 bg-white py-4 px-8 rounded-xl">
+      <div className="flex w-[30%] flex-col gap-4 bg-white py-4 px-8 rounded-xl animate-zoomIn">
         <div>
           <InputCreate
             label={"Tên danh mục"}
