@@ -1,15 +1,72 @@
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { useEffect, useState } from "react";
+
+const datetimeToDate = (v) => (v ? v.split(" ")[0] : "");
 
 export default function PromotionModal({
   open,
-  mode = "edit", // "edit" | "duplicate"
+  mode = "edit", // edit | duplicate | create
   initialData = {},
   onClose,
   onSubmit,
 }) {
+  const isEdit = mode === "edit";
+  const isDuplicate = mode === "duplicate";
+  const isCreate = mode === "create";
+
+  const [formData, setFormData] = useState({
+    name: "",
+    type: "PERCENT",
+    value: "",
+    start_at: "",
+    end_at: "",
+    isActive: false,
+  });
+
+  // init / refill khi mở modal hoặc đổi mode
+  useEffect(() => {
+    if (!open) return;
+
+    setFormData({
+      name: initialData.name
+        ? isEdit
+          ? initialData.name
+          : `${initialData.name} (Copy)`
+        : "",
+      type: initialData.type ?? "PERCENT",
+      value: initialData.value ?? "",
+      start_at: isEdit ? datetimeToDate(initialData.start_at) : "",
+      end_at: isEdit ? datetimeToDate(initialData.end_at) : "",
+      isActive: isEdit ? !!initialData.isActive : false,
+    });
+  }, [open, isEdit, initialData]);
+
   if (!open) return null;
 
-  const isEdit = mode === "edit";
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : type === "number"
+            ? Number(value)
+            : value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      ...formData,
+      start_at: `${formData.start_at} 00:00:00`,
+      end_at: `${formData.end_at} 23:59:59`,
+    };
+
+    onSubmit(payload);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
@@ -35,14 +92,7 @@ export default function PromotionModal({
         </div>
 
         {/* Form */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const data = Object.fromEntries(new FormData(e.target));
-            onSubmit(data);
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
           <div>
             <label className="block text-sm font-medium mb-1">
@@ -50,14 +100,9 @@ export default function PromotionModal({
             </label>
             <input
               name="name"
-              defaultValue={
-                initialData.name
-                  ? isEdit
-                    ? initialData.name
-                    : `${initialData.name} (Copy)`
-                  : ""
-              }
-              placeholder="e.g. Summer Weekend Sale"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Ví dụ: Khai trương, Giảm tết, ..."
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
               required
             />
@@ -69,7 +114,8 @@ export default function PromotionModal({
               <label className="block text-sm font-medium mb-1">Loại</label>
               <select
                 name="type"
-                defaultValue={initialData.type ?? "PERCENT"}
+                value={formData.type}
+                onChange={handleChange}
                 className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="PERCENT">Giảm theo phần trăm (%)</option>
@@ -82,7 +128,8 @@ export default function PromotionModal({
               <input
                 name="value"
                 type="number"
-                defaultValue={initialData.value ?? ""}
+                value={formData.value}
+                onChange={handleChange}
                 className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                 required
               />
@@ -98,7 +145,8 @@ export default function PromotionModal({
               <input
                 name="start_at"
                 type="date"
-                defaultValue={isEdit ? initialData.start_at : ""}
+                value={formData.start_at}
+                onChange={handleChange}
                 className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                 required
               />
@@ -106,12 +154,13 @@ export default function PromotionModal({
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                Ngày kết thúc
+                Đến hết ngày
               </label>
               <input
                 name="end_at"
                 type="date"
-                defaultValue={isEdit ? initialData.end_at : ""}
+                value={formData.end_at}
+                onChange={handleChange}
                 className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                 required
               />
@@ -124,12 +173,13 @@ export default function PromotionModal({
             <input
               type="checkbox"
               name="isActive"
-              defaultChecked={isEdit ? initialData.isActive : false}
-              disabled={!isEdit}
+              checked={formData.isActive}
+              disabled={isDuplicate}
               className="w-11 h-6 accent-primary"
+              onChange={handleChange}
             />
             <span className="text-sm text-primary">
-              {isEdit ? "Active" : "Inactive"}
+              {formData.isActive ? "Hoạt động" : "Ngừng hoạt động"}
             </span>
           </div>
 

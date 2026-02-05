@@ -6,5 +6,8 @@ const promoApi = {
   updateActivePromotion(promotionId, active) {
     return axiosClient.patch(`/promotions/${promotionId}/active`, active);
   },
+  updatePromotion(promotionId, data) {
+    return axiosClient.put(`/promotions/${promotionId}`, data);
+  },
 };
 export default promoApi;

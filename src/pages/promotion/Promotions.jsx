@@ -24,6 +24,33 @@ export default function Promotions() {
   const [mode, setMode] = useState("edit");
   const [selectedPromotion, setSelectedPromotion] = useState(null);
 
+  const confirmStatusTransition = async (currentStatus, payload) => {
+    const { start_at, end_at } = payload;
+    const now = new Date();
+    const startDate = new Date(start_at);
+    const endDate = new Date(end_at);
+
+    // UPCOMING sang ACTIVE
+    if (currentStatus === "UPCOMING" && startDate <= now && now < endDate) {
+      return await confirm({
+        title: "Promotion sẽ được kích hoạt ngay sau khi lưu!",
+        message:
+          "Sau khi kích hoạt, bạn sẽ không thể chỉnh lại thời gian bắt đầu / kết thúc. Bạn có chắc chắn muốn tiếp tục?",
+      });
+    }
+
+    // UPCOMING sang EXPIRED
+    if (currentStatus === "UPCOMING" && endDate < now) {
+      return await confirm({
+        title: "Promotion đã quá hạn",
+        message:
+          "Thời gian kết thúc đã ở trong quá khứ. Promotion sẽ chuyển sang trạng thái hết hạn. Bạn có muốn tiếp tục?",
+      });
+    }
+
+    return true;
+  };
+
   // Edit
   const handleEdit = (promotion) => {
     setMode("edit");
@@ -31,9 +58,42 @@ export default function Promotions() {
     setOpen(true);
   };
 
+  const submitEditPromotion = async (promotionId, payload, currentStatus) => {
+    const accepted = await confirmStatusTransition(currentStatus, payload);
+    if (!accepted) return;
+
+    setLoading(true);
+    try {
+      const res = await promoApi.updatePromotion(promotionId, payload);
+      const status = res.data?.newStatus;
+      setPromotions((prev) =>
+        prev.map((item) =>
+          item.promotionId === promotionId
+            ? { promotionId: item.promotionId, ...payload, status: status }
+            : item,
+        ),
+      );
+
+      toast.success("Cập nhật promotion thành công");
+    } catch (error) {
+      toast.error("Cập nhật promotion thất bại");
+      return;
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
+  };
+
   // Duplicate
   const handleDuplicate = (promotion) => {
     setMode("duplicate");
+    setSelectedPromotion(promotion);
+    setOpen(true);
+  };
+
+  // Duplicate
+  const handleCreate = (promotion) => {
+    setMode("create");
     setSelectedPromotion(promotion);
     setOpen(true);
   };
@@ -180,7 +240,7 @@ export default function Promotions() {
       ) : (
         <>
           <SubTitle
-            handle={() => {}}
+            handleMove={() => handleCreate({})}
             title="Quản lý khuyến mãi"
             miniTitle={`Tổng: ${promotions.length} promotion`}
             active={true}
@@ -242,13 +302,16 @@ export default function Promotions() {
             mode={mode}
             initialData={selectedPromotion}
             onClose={() => setOpen(false)}
-            onSubmit={(data) => {
+            onSubmit={async (data) => {
               if (mode === "edit") {
-                // PUT /promotions/:id
+                await submitEditPromotion(
+                  selectedPromotion.promotionId,
+                  data,
+                  selectedPromotion.status,
+                );
               } else {
-                // POST /promotions
+                setOpen(false);
               }
-              setOpen(false);
             }}
           />
           ;
