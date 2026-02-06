@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import foodsApi from "../../api/foodsApi";
 import { mapVariants } from "../../mappers/variants";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { VariantModal } from "./VariantModal";
 
 export function VariantDrawer({ open, onClose, foodName, foodId }) {
   const [loadingPage, setLoadingPage] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const [variants, setVariants] = useState([]);
   useEffect(() => {
     const controller = new AbortController();
@@ -25,6 +28,10 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
     loadVariants();
     return () => controller.abort();
   }, [foodId]);
+
+  const handleCreate = () => {
+    setOpenModal(true);
+  };
 
   if (!open) return null;
 
@@ -61,8 +68,8 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {variants.map((variant, index) => (
-                <VariantCard key={index} variant={variant} />
+              {variants.map((variant) => (
+                <VariantCard key={variant.variantId} variant={variant} />
               ))}
             </div>
 
@@ -71,6 +78,7 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
               <button
                 className="w-full py-2 rounded-xl bg-primary text-white font-semibold
               hover:bg-primary-md transition"
+                onClick={handleCreate}
               >
                 Thêm loại sản phẩm
               </button>
@@ -78,6 +86,12 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
           </>
         )}
       </div>
+
+      <VariantModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        initialData={selectedVariant}
+      />
     </>
   );
 }

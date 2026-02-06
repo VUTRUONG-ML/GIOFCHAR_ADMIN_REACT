@@ -7,7 +7,6 @@ export function InputCreate({ label, placeHolder, ...props }) {
         {label}
       </label>
       <input
-        type="money"
         className="
             w-full 
             focus:border-primary 

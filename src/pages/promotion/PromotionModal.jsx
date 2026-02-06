@@ -70,7 +70,7 @@ export default function PromotionModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <div className="animate-zoomIn bg-white rounded-2xl shadow-xl w-[560px] p-6 relative">
+      <div className="animate-zoomIn bg-gradient-to-b from-[#E8F5E8] via-[#F1F8E9] to-[#E8F5E8] rounded-2xl shadow-xl w-[560px] p-6 relative">
         {/* Close */}
         <button
           onClick={onClose}
