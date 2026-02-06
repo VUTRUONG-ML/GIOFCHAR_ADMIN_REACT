@@ -9,5 +9,8 @@ const promoApi = {
   updatePromotion(promotionId, data) {
     return axiosClient.put(`/promotions/${promotionId}`, data);
   },
+  createPromotion(data) {
+    return axiosClient.post(`/promotions`, data);
+  },
 };
 export default promoApi;

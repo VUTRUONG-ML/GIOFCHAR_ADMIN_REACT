@@ -24,14 +24,41 @@ export default function Promotions() {
   const [mode, setMode] = useState("edit");
   const [selectedPromotion, setSelectedPromotion] = useState(null);
 
-  const confirmStatusTransition = async (currentStatus, payload) => {
-    const { start_at, end_at } = payload;
+  const calcPromotionStatus = (start_at, end_at) => {
     const now = new Date();
-    const startDate = new Date(start_at);
-    const endDate = new Date(end_at);
+    const start = new Date(start_at);
+    const end = new Date(end_at);
+
+    if (end < now) return "EXPIRED";
+    if (start <= now && now < end) return "ACTIVE";
+    return "UPCOMING";
+  };
+
+  const confirmStatusTransition = async (payload, currentStatus) => {
+    const nextStatus = calcPromotionStatus(payload.start_at, payload.end_at);
+
+    if (!currentStatus) {
+      if (nextStatus === "ACTIVE") {
+        return await confirm({
+          title: "Promotion sẽ được kích hoạt ngay sau khi tạo!",
+          message:
+            "Sau khi kích hoạt, bạn sẽ không thể chỉnh lại thời gian. Bạn có chắc chắn muốn tiếp tục?",
+        });
+      }
+
+      if (nextStatus === "EXPIRED") {
+        return await confirm({
+          title: "Promotion đã quá hạn",
+          message:
+            "Promotion sẽ được tạo ở trạng thái hết hạn. Bạn có muốn tiếp tục?",
+        });
+      }
+
+      return true;
+    }
 
     // UPCOMING sang ACTIVE
-    if (currentStatus === "UPCOMING" && startDate <= now && now < endDate) {
+    if (currentStatus === "UPCOMING" && nextStatus === "ACTIVE") {
       return await confirm({
         title: "Promotion sẽ được kích hoạt ngay sau khi lưu!",
         message:
@@ -40,7 +67,7 @@ export default function Promotions() {
     }
 
     // UPCOMING sang EXPIRED
-    if (currentStatus === "UPCOMING" && endDate < now) {
+    if (currentStatus === "UPCOMING" && nextStatus === "EXPIRED") {
       return await confirm({
         title: "Promotion đã quá hạn",
         message:
@@ -58,8 +85,22 @@ export default function Promotions() {
     setOpen(true);
   };
 
+  // Duplicate
+  const handleDuplicate = (promotion) => {
+    setMode("duplicate");
+    setSelectedPromotion(promotion);
+    setOpen(true);
+  };
+
+  // Duplicate
+  const handleCreate = (promotion) => {
+    setMode("create");
+    setSelectedPromotion(promotion);
+    setOpen(true);
+  };
+
   const submitEditPromotion = async (promotionId, payload, currentStatus) => {
-    const accepted = await confirmStatusTransition(currentStatus, payload);
+    const accepted = await confirmStatusTransition(payload, currentStatus);
     if (!accepted) return;
 
     setLoading(true);
@@ -84,20 +125,44 @@ export default function Promotions() {
     }
   };
 
-  // Duplicate
-  const handleDuplicate = (promotion) => {
-    setMode("duplicate");
-    setSelectedPromotion(promotion);
-    setOpen(true);
+  const submitCreatePromotion = async (payload) => {
+    const accept = await confirmStatusTransition(payload);
+    if (!accept) return;
+
+    setLoading(true);
+    try {
+      const res = await promoApi.createPromotion(payload);
+      const newPromotion = res.data;
+      setPromotions((prev) => [
+        ...prev,
+        {
+          promotionId: newPromotion.promotionId,
+          ...payload,
+          status: newPromotion.status,
+        },
+      ]);
+
+      toast.success("Tạo chương trình giảm giá thành công");
+    } catch (error) {
+      toast.error("Tạo chương trình giảm giá thất bại");
+      return;
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   };
 
-  // Duplicate
-  const handleCreate = (promotion) => {
-    setMode("create");
-    setSelectedPromotion(promotion);
-    setOpen(true);
+  const handleSubmitModal = async (data) => {
+    if (mode === "edit") {
+      await submitEditPromotion(
+        selectedPromotion.promotionId,
+        data,
+        selectedPromotion.status,
+      );
+    } else {
+      await submitCreatePromotion(data);
+    }
   };
-
   useEffect(() => {
     const controller = new AbortController();
     const loadingPromotions = async () => {
@@ -302,17 +367,7 @@ export default function Promotions() {
             mode={mode}
             initialData={selectedPromotion}
             onClose={() => setOpen(false)}
-            onSubmit={async (data) => {
-              if (mode === "edit") {
-                await submitEditPromotion(
-                  selectedPromotion.promotionId,
-                  data,
-                  selectedPromotion.status,
-                );
-              } else {
-                setOpen(false);
-              }
-            }}
+            onSubmit={handleSubmitModal}
           />
           ;
         </>

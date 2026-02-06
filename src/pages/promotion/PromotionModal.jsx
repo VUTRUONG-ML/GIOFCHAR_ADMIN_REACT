@@ -35,9 +35,9 @@ export default function PromotionModal({
         : "",
       type: initialData.type ?? "PERCENT",
       value: initialData.value ?? "",
-      start_at: isEdit ? datetimeToDate(initialData.start_at) : "",
-      end_at: isEdit ? datetimeToDate(initialData.end_at) : "",
-      isActive: isEdit ? !!initialData.isActive : false,
+      start_at: datetimeToDate(initialData.start_at) ?? "",
+      end_at: datetimeToDate(initialData.end_at) ?? "",
+      isActive: initialData.isActive ?? false,
     });
   }, [open, isEdit, initialData]);
 
