@@ -5,8 +5,12 @@ import foodsApi from "../../api/foodsApi";
 import { mapVariants } from "../../mappers/variants";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { VariantModal } from "./VariantModal";
+import { useLoader } from "../../contexts/LoaderContext";
+import { toast } from "react-toastify";
 
 export function VariantDrawer({ open, onClose, foodName, foodId }) {
+  const { setLoading } = useLoader();
+
   const [loadingPage, setLoadingPage] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -31,6 +35,20 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
 
   const handleCreate = () => {
     setOpenModal(true);
+  };
+  const submitCreate = async (payload) => {
+    //payload: {weight_gram, originalPrice, stock, promotionId?}
+    setLoading(true);
+    try {
+      const res = await foodsApi.createVariant(foodId, payload);
+      const newVariant = res.data?.variant;
+      setVariants((prev) => [...prev, mapVariants(newVariant)]);
+    } catch (error) {
+      toast.warn("Đã có lỗi xảy ra khi tạo variant!");
+    } finally {
+      setLoading(false);
+      setOpenModal(false);
+    }
   };
 
   if (!open) return null;
@@ -91,6 +109,7 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
         open={openModal}
         onClose={() => setOpenModal(false)}
         initialData={selectedVariant}
+        onSubmit={submitCreate}
       />
     </>
   );

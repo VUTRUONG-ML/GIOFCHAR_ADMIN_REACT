@@ -1,27 +1,13 @@
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { formatMoney } from "../../utils/formatMoney";
 import { calcFinalPrice } from "../../utils/calc";
 import { InputCreate } from "../../components/InputCreate";
-const MOCK_PROMOTIONS = [
-  {
-    promotionId: 2,
-    name: "Giảm 50.000đ",
-    type: "FIXED",
-    value: 50000,
-    status: "ACTIVE",
-    isActive: 1,
-  },
-  {
-    promotionId: 3,
-    name: "Giảm 10%",
-    type: "PERCENT",
-    value: 10,
-    status: "ACTIVE",
-    isActive: 1,
-  },
-];
+import promoApi from "../../api/promotionApi";
+import { toast } from "react-toastify";
+import LoadingSpinner from "../../components/LoadingSpinner";
+
 export function VariantModal({
   open,
   onClose,
@@ -34,6 +20,25 @@ export function VariantModal({
     stock: initialData?.stock ?? 0,
     promotionId: initialData?.promotionId ?? "",
   }));
+  const [promotions, setPromotions] = useState([]);
+  const [loadingPage, setLoadingPage] = useState(true);
+  useEffect(() => {
+    const controller = new AbortController();
+    const loadPromotions = async () => {
+      try {
+        const res = await promoApi.getPromotions(controller.signal);
+        const promotionRes = res.data;
+        setPromotions(promotionRes.filter((p) => p.isActive));
+      } catch (error) {
+        if (error.name === "CanceledError") return;
+        toast.warn("Đã có lỗi xảy ra khi tải giảm giá!");
+      } finally {
+        setLoadingPage(false);
+      }
+    };
+    loadPromotions();
+    return () => controller.abort();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -57,7 +62,7 @@ export function VariantModal({
     valuePromotion
   }
 */
-  const promotions = MOCK_PROMOTIONS.filter((p) => p.isActive);
+  // const promotions = MOCK_PROMOTIONS.filter((p) => p.isActive);
 
   const selectedPromotion = promotions.find(
     (p) => p.promotionId === Number(form.promotionId),
@@ -67,6 +72,7 @@ export function VariantModal({
 
   if (!open) return null;
 
+  if (loadingPage) return <LoadingSpinner />;
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({

@@ -30,6 +30,9 @@ const foodsApi = {
   getVariantsOfFood(foodId, signal) {
     return axiosClient.get(`/foods/${foodId}/variants`, { signal });
   },
+  createVariant(foodId, data) {
+    return axiosClient.post(`/foods/${foodId}/variants`, data);
+  },
 };
 
 export default foodsApi;
