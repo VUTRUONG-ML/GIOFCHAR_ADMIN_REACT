@@ -7,29 +7,40 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import { VariantModal } from "./VariantModal";
 import { useLoader } from "../../contexts/LoaderContext";
 import { toast } from "react-toastify";
+import promoApi from "../../api/promotionApi";
+import variantApi from "../../api/variantApi";
+import { useConfirm } from "../../contexts/ConfirmContext";
 
 export function VariantDrawer({ open, onClose, foodName, foodId }) {
   const { setLoading } = useLoader();
 
+  const { confirm } = useConfirm();
   const [loadingPage, setLoadingPage] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [variants, setVariants] = useState([]);
+  const [promotions, setPromotions] = useState([]);
   useEffect(() => {
     const controller = new AbortController();
-    const loadVariants = async () => {
+    const loadData = async () => {
       setLoadingPage(true);
       try {
-        const res = await foodsApi.getVariantsOfFood(foodId, controller.signal);
-        const variantRes = res.data?.map(mapVariants);
-        setVariants(variantRes);
+        const [variantRes, promotionRes] = await Promise.all([
+          foodsApi.getVariantsOfFood(foodId, controller.signal),
+          promoApi.getPromotions(controller.signal),
+        ]);
+        const variants = variantRes.data?.map(mapVariants);
+        const promotions = promotionRes.data;
+        setVariants(variants);
+        setPromotions(promotions.filter((p) => p.isActive));
       } catch (error) {
         if (error.name === "CanceledError") return;
+        toast.warn("Đã có lỗi xảy ra khi tải dữ liệu!");
       } finally {
         if (!controller.signal.aborted) setLoadingPage(false);
       }
     };
-    loadVariants();
+    loadData();
     return () => controller.abort();
   }, [foodId]);
 
@@ -48,6 +59,23 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
     } finally {
       setLoading(false);
       setOpenModal(false);
+    }
+  };
+  const submitDelete = async (variantId) => {
+    const ok = await confirm({
+      title: "Bạn có chắc chắn muốn xóa?",
+      message: "Việc này có thể ảnh hưởng đến trải nghiệm của khách hàng!",
+    });
+    if (!ok) return;
+    setLoading(true);
+    try {
+      await variantApi.deleteVariant(variantId);
+      setVariants((prev) => prev.filter((p) => p.variantId !== variantId));
+      toast.success("Xóa loại sản phẩm thành công");
+    } catch (error) {
+      toast.warn("Sản phẩm này không thể xóa, bạn hãy thử ẩn nó đi!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,7 +115,11 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {variants.map((variant) => (
-                <VariantCard key={variant.variantId} variant={variant} />
+                <VariantCard
+                  key={variant.variantId}
+                  variant={variant}
+                  onDelete={submitDelete}
+                />
               ))}
             </div>
 
@@ -95,7 +127,7 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
             <div className="p-4 border-t border-gray-200">
               <button
                 className="w-full py-2 rounded-xl bg-primary text-white font-semibold
-              hover:bg-primary-md transition"
+              hover:bg-primary-md transition cursor-pointer"
                 onClick={handleCreate}
               >
                 Thêm loại sản phẩm
@@ -110,6 +142,7 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
         onClose={() => setOpenModal(false)}
         initialData={selectedVariant}
         onSubmit={submitCreate}
+        promotions={promotions}
       />
     </>
   );

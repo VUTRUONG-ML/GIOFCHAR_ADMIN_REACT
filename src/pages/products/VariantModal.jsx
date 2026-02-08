@@ -1,18 +1,16 @@
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { formatMoney } from "../../utils/formatMoney";
 import { calcFinalPrice } from "../../utils/calc";
 import { InputCreate } from "../../components/InputCreate";
-import promoApi from "../../api/promotionApi";
-import { toast } from "react-toastify";
-import LoadingSpinner from "../../components/LoadingSpinner";
 
 export function VariantModal({
   open,
   onClose,
   initialData, // null = create | object = update
   onSubmit,
+  promotions,
 }) {
   const [form, setForm] = useState(() => ({
     weight: initialData?.weight_gram ?? 0,
@@ -20,25 +18,6 @@ export function VariantModal({
     stock: initialData?.stock ?? 0,
     promotionId: initialData?.promotionId ?? "",
   }));
-  const [promotions, setPromotions] = useState([]);
-  const [loadingPage, setLoadingPage] = useState(true);
-  useEffect(() => {
-    const controller = new AbortController();
-    const loadPromotions = async () => {
-      try {
-        const res = await promoApi.getPromotions(controller.signal);
-        const promotionRes = res.data;
-        setPromotions(promotionRes.filter((p) => p.isActive));
-      } catch (error) {
-        if (error.name === "CanceledError") return;
-        toast.warn("Đã có lỗi xảy ra khi tải giảm giá!");
-      } finally {
-        setLoadingPage(false);
-      }
-    };
-    loadPromotions();
-    return () => controller.abort();
-  }, []);
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -72,14 +51,13 @@ export function VariantModal({
 
   if (!open) return null;
 
-  if (loadingPage) return <LoadingSpinner />;
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({
       weight_gram: Number(form.weight),
       originalPrice: Number(form.originalPrice),
       stock: Number(form.stock),
-      promotionId: selectedPromotion.promotionId,
+      promotionId: selectedPromotion ? selectedPromotion.promotionId : null,
     });
   };
 
@@ -90,7 +68,7 @@ export function VariantModal({
 
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center animate-zoomIn">
-        <div className="w-[420px] bg-white rounded-2xl shadow-xl p-5">
+        <div className="w-[420px] bg-gradient-to-b from-[#E8F5E8] via-[#F1F8E9] to-[#E8F5E8] rounded-2xl shadow-xl p-5">
           {/* Header */}
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-secondary">

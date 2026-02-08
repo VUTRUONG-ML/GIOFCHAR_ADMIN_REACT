@@ -1,12 +1,16 @@
 import { formatMoney } from "../../utils/formatMoney";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-export function VariantCard({ variant }) {
+
+export function VariantCard({ variant, onDelete }) {
   function getLabelDiscount(promotionType, promotionValue) {
     if (promotionType === "FIXED") return formatMoney(promotionValue);
     return `${promotionValue}%`;
   }
-
+  const handleDelete = (e) => {
+    e.preventDefault();
+    onDelete(variant.variantId);
+  };
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
       {/* Top */}
@@ -48,7 +52,7 @@ export function VariantCard({ variant }) {
           <button>
             <AppRegistrationOutlinedIcon className="text-blue-800 cursor-pointer active:scale-95" />
           </button>
-          <button>
+          <button onClick={handleDelete}>
             <DeleteForeverOutlinedIcon className="text-red-800 cursor-pointer active:scale-95" />
           </button>
         </div>
