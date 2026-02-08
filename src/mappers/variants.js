@@ -12,5 +12,7 @@ export function mapVariants(variant) {
     promotionValue: variant.valuePromotion,
     stock: variant.inStock,
     weight_gram: variant.weight_gram,
+    isActive: variant.isActive,
+    promotionId: variant.promotionId,
   };
 }

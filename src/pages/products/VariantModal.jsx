@@ -17,13 +17,19 @@ export function VariantModal({
     originalPrice: initialData?.originalPrice ?? 0,
     stock: initialData?.stock ?? 0,
     promotionId: initialData?.promotionId ?? "",
+    isActive: initialData?.isActive ?? true,
   }));
 
   const handleChange = (e) => {
-    const { name, value, type } = e.target;
+    const { name, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: type === "number" ? Number(value) : value,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : type === "number"
+            ? Number(value)
+            : value,
     }));
   };
   /*
@@ -133,6 +139,20 @@ export function VariantModal({
               value={form.stock}
               onChange={handleChange}
             />
+
+            {/* isActive */}
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                name="isActive"
+                disabled={!initialData}
+                checked={form.isActive}
+                onChange={handleChange}
+              />
+              <span className="text-sm font-bold">
+                {form.isActive ? "Đang kinh doanh" : "Ngừng kinh doanh"}
+              </span>
+            </div>
           </div>
 
           {/* Footer */}

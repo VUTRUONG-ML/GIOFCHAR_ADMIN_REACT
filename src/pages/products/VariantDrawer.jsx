@@ -45,6 +45,11 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
   }, [foodId]);
 
   const handleCreate = () => {
+    setSelectedVariant(null);
+    setOpenModal(true);
+  };
+  const handleUpdate = (variant) => {
+    setSelectedVariant(variant);
     setOpenModal(true);
   };
   const submitCreate = async (payload) => {
@@ -119,6 +124,7 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
                   key={variant.variantId}
                   variant={variant}
                   onDelete={submitDelete}
+                  onUpdate={handleUpdate}
                 />
               ))}
             </div>
@@ -138,6 +144,7 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
       </div>
 
       <VariantModal
+        key={selectedVariant ? selectedVariant.variantId : "create"}
         open={openModal}
         onClose={() => setOpenModal(false)}
         initialData={selectedVariant}
