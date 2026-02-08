@@ -32,22 +32,6 @@ export function VariantModal({
             : value,
     }));
   };
-  /*
-  get variant:{
-    variantId,
-    weight_gram,
-    originalPrice,
-    stock,
-    promotionId
-  }
-
-  get promotions:{
-    promotionsId,
-    typePromotion,
-    valuePromotion
-  }
-*/
-  // const promotions = MOCK_PROMOTIONS.filter((p) => p.isActive);
 
   const selectedPromotion = promotions.find(
     (p) => p.promotionId === Number(form.promotionId),
@@ -63,7 +47,11 @@ export function VariantModal({
       weight_gram: Number(form.weight),
       originalPrice: Number(form.originalPrice),
       stock: Number(form.stock),
+      isActive: form.isActive,
       promotionId: selectedPromotion ? selectedPromotion.promotionId : null,
+      promotionType: selectedPromotion?.type ?? null, // Thêm vào để hiển cập nhật ui khi update
+      promotionValue: selectedPromotion?.value ?? null, // như trên
+      price: finalPrice, // như trên
     });
   };
 

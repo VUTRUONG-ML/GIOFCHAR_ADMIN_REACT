@@ -83,6 +83,36 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
       setLoading(false);
     }
   };
+  const submitUpdate = async (variantId, payload) => {
+    const ok = await confirm({
+      title: "Xác nhận thay đổi!",
+      message: "Bạn đã xem kĩ thông tin cập nhật rồi chứ?",
+    });
+    if (!ok) return;
+    setLoading(true);
+    try {
+      await variantApi.updateVariant(variantId, payload);
+      setVariants((prev) =>
+        prev.map((p) =>
+          p.variantId === variantId ? { variantId, ...payload } : p,
+        ),
+      );
+      toast.success("Cập nhật sản phẩm thành công");
+    } catch (error) {
+      toast.warn("Đã có lỗi khi cập nhật loại sản phẩm");
+    } finally {
+      setLoading(false);
+      setOpenModal(false);
+    }
+  };
+  const handleSubmitModal = async (data) => {
+    // selected có nghĩa là đang update
+    if (selectedVariant) {
+      await submitUpdate(selectedVariant.variantId, data);
+    } else {
+      await submitCreate(data);
+    }
+  };
 
   if (!open) return null;
 
@@ -148,7 +178,7 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
         open={openModal}
         onClose={() => setOpenModal(false)}
         initialData={selectedVariant}
-        onSubmit={submitCreate}
+        onSubmit={handleSubmitModal}
         promotions={promotions}
       />
     </>
