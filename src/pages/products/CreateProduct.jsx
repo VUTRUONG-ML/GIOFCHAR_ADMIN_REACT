@@ -3,6 +3,10 @@ import { InputCreate } from "../../components/InputCreate";
 import { SubTitle } from "../../components/SubTitle";
 import { TextArea } from "../../components/TextArea";
 import { VND } from "../../constants/currency";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { toast } from "react-toastify";
 import categoriesApi from "../../api/categoriesApi";
@@ -20,16 +24,33 @@ export default function CreateProduct() {
   const [food, setFood] = useState({
     foodName: "",
     foodDescription: "",
-    originalPrice: "",
-    discount: 0,
+    ingredients: [],
     rating: 0,
-    stock: "",
     isActive: 1,
     categoryID: "",
     imageFood: null,
   });
 
+  // State hỗ trợ thêm nguyên liệu
+  const [newIngre, setNewIngre] = useState("");
+
   const navigate = useNavigate();
+
+  // --- Logic xử lý Nguyên liệu ---
+  const addIngredient = () => {
+    if (!newIngre.trim()) return;
+    setFood((prev) => ({
+      ...prev,
+      ingredients: [...prev.ingredients, newIngre.trim()],
+    }));
+    setNewIngre("");
+  };
+
+  const removeIngredient = (index) => {
+    const updated = food.ingredients.filter((_, i) => i !== index);
+    setFood((prev) => ({ ...prev, ingredients: updated }));
+  };
+
   const handleOpenFolder = () => fileInputRef.current.click();
   const handleFileChange = (e) => {
     const input = e.target;
@@ -71,7 +92,9 @@ export default function CreateProduct() {
     setLoading(true);
     const formData = new FormData();
     Object.keys(food).map((key) => {
-      formData.append(key, food[key]);
+      if (key === "ingredients")
+        formData.append(key, JSON.stringify(food[key]));
+      else formData.append(key, food[key]);
     });
     try {
       await foodsApi.createFood(formData);
@@ -93,6 +116,7 @@ export default function CreateProduct() {
       <SubTitle title="Thêm sản phấm mới" />
       {/* data */}
       <div className="flex-1 flex gap-4 py-1">
+        {/* left col */}
         <div className="flex-3 flex flex-col gap-3 bg-white shadow rounded-xl p-4 items-center">
           {/* uploadFile */}
           <div
@@ -138,6 +162,8 @@ export default function CreateProduct() {
                 }
               />
             </div>
+          </div>
+          <div className="flex items-center w-full gap-2">
             {/* category */}
             <div className="flex-1 flex flex-col items-start gap-2">
               <label htmlFor="" className="text-sm font-bold">
@@ -169,37 +195,11 @@ export default function CreateProduct() {
               </select>
             </div>
           </div>
-          <div className="flex items-center w-full gap-2">
-            {/* originalPrice */}
-            <div className="flex-1 flex flex-col items-start gap-2">
-              <InputCreate
-                label={`Giá (${VND})`}
-                placeHolder={"0"}
-                value={food.originalPrice}
-                onChange={(e) =>
-                  setFood((prev) => ({
-                    ...prev,
-                    originalPrice: e.target.value,
-                  }))
-                }
-              />
-            </div>
-            {/* stock */}
-            <div className="flex-1 flex flex-col items-start gap-2">
-              <InputCreate
-                label={"Tồn kho (kg)"}
-                placeHolder={0}
-                value={food.stock}
-                onChange={(e) =>
-                  setFood((prev) => ({ ...prev, stock: e.target.value }))
-                }
-              />
-            </div>
-          </div>
         </div>
-        <div className="flex-2 flex flex-col gap-8 bg-white shadow rounded-xl p-4">
+        {/* right col */}
+        <div className="flex-2 flex flex-col bg-white shadow rounded-xl p-4">
           {/* description */}
-          <div className="flex-1 flex flex-col items-start gap-2">
+          <div className="flex-1 mb-2 flex flex-col items-start gap-2">
             <TextArea
               label={"Mô tả sản phẩm"}
               placeHolder={
@@ -214,22 +214,64 @@ export default function CreateProduct() {
               }}
             />
           </div>
-          {/* discount */}
-          <div>
-            <InputCreate
-              label={`Giảm giá %`}
-              placeHolder={"0"}
-              value={food.discount}
-              onChange={(e) =>
-                setFood((prev) => ({
-                  ...prev,
-                  discount: e.target.value,
-                }))
-              }
-            />
+
+          {/* ingredients */}
+          <div className="my-2">
+            <div className="flex justify-between items-center mb-3">
+              <label className="text-sm font-bold text-gray-700">
+                Nguyên liệu sản phẩm
+              </label>
+              <span className="text-xs text-gray-400">
+                {food.ingredients.length} thành phần
+              </span>
+            </div>
+
+            {/* Ô nhập nguyên liệu mới */}
+            <div className="flex gap-2 mb-4">
+              <input
+                type="text"
+                placeholder="Thêm nguyên liệu (ví dụ: 500g Thịt heo)"
+                className="flex-1 border-b border-gray-300 py-1 focus:border-primary outline-none text-sm"
+                value={newIngre}
+                onChange={(e) => setNewIngre(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addIngredient()}
+              />
+              <button
+                onClick={addIngredient}
+                className="text-primary hover:scale-110 transition-transform"
+              >
+                <AddCircleOutlineOutlinedIcon />
+              </button>
+            </div>
+
+            {/* Danh sách hiển thị */}
+            <div className="max-h-20 overflow-y-auto pr-2">
+              <div className="flex flex-wrap gap-2">
+                {food.ingredients.map((ing, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between bg-gray-50 px-2 rounded-lg group"
+                  >
+                    <span className="text-sm text-gray-600 italic">
+                      - {ing}
+                    </span>
+
+                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => removeIngredient(index)}
+                        className="p-1 text-red-400"
+                      >
+                        <HighlightOffOutlinedIcon sx={{ fontSize: 18 }} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
+
           {/* active */}
-          <div className="flex flex-col items-start gap-2">
+          <div className="flex flex-col items-start gap-2 my-2">
             <label htmlFor="" className="text-sm font-bold">
               Trạng thái
             </label>
@@ -251,8 +293,9 @@ export default function CreateProduct() {
               <option value="false">Tạm ẩn</option>
             </select>
           </div>
+
           {/* button */}
-          <div>
+          <div className="mt-2">
             <button
               className="bg-primary w-full border-0 rounded-lg text-md text-white font-medium py-3 cursor-pointer active:scale-95"
               onClick={handleCreateProduct}

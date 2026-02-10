@@ -58,7 +58,11 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
     try {
       const res = await foodsApi.createVariant(foodId, payload);
       const newVariant = res.data?.variant;
-      setVariants((prev) => [...prev, mapVariants(newVariant)]);
+      setVariants((prev) => [
+        ...prev,
+        { variantId: newVariant.variantId, ...payload },
+      ]);
+      toast.success("Tạo loại sản phẩm thành công");
     } catch (error) {
       toast.warn("Đã có lỗi xảy ra khi tạo variant!");
     } finally {
@@ -106,6 +110,7 @@ export function VariantDrawer({ open, onClose, foodName, foodId }) {
     }
   };
   const handleSubmitModal = async (data) => {
+    console.log(">> data:", data);
     // selected có nghĩa là đang update
     if (selectedVariant) {
       await submitUpdate(selectedVariant.variantId, data);

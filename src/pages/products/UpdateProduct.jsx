@@ -60,7 +60,7 @@ export default function UpdateProduct() {
         setFood(resFood.data);
         setLinkImage(resFood.data?.image);
         const resCategory = await categoriesApi.getCategories(
-          controller.signal
+          controller.signal,
         );
         setCategories(resCategory.data?.categories);
       } catch (error) {
@@ -146,6 +146,8 @@ export default function UpdateProduct() {
                 }
               />
             </div>
+          </div>
+          <div className="flex items-center w-full gap-2">
             {/* category */}
             <div className="flex-1 flex flex-col items-start gap-2">
               <label htmlFor="" className="text-sm font-bold">
@@ -175,33 +177,6 @@ export default function UpdateProduct() {
                   );
                 })}
               </select>
-            </div>
-          </div>
-          <div className="flex items-center w-full gap-2">
-            {/* price */}
-            <div className="flex-1 flex flex-col items-start gap-2">
-              <InputCreate
-                label={`Giá gốc (${VND})`}
-                placeHolder={"0"}
-                value={food.originalPrice}
-                onChange={(e) =>
-                  setFood((prev) => ({
-                    ...prev,
-                    originalPrice: e.target.value,
-                  }))
-                }
-              />
-            </div>
-            {/* stock */}
-            <div className="flex-1 flex flex-col items-start gap-2">
-              <InputCreate
-                label={"Tồn kho (kg)"}
-                placeHolder={0}
-                value={food.stock}
-                onChange={(e) =>
-                  setFood((prev) => ({ ...prev, stock: e.target.value }))
-                }
-              />
             </div>
           </div>
         </div>

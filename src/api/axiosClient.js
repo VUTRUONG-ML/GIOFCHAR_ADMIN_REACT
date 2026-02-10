@@ -2,6 +2,7 @@ import axios from "axios";
 
 import { navigateTo } from "../utils/navigationService";
 import { authService } from "../utils/authService";
+import { toast } from "react-toastify";
 
 const defaultOptions = {
   baseURL: "http://localhost:8081/api",
@@ -57,6 +58,8 @@ axiosClient.interceptors.response.use(
       default:
         console.warn("Error", message);
     }
+
+    toast.error(message);
 
     // Nếu return error thì nó vào try lúc nhận response còn nếu throw thì vào catch
     throw error;

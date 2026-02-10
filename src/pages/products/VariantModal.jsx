@@ -1,5 +1,5 @@
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { formatMoney } from "../../utils/formatMoney";
 import { calcFinalPrice } from "../../utils/calc";
@@ -19,6 +19,28 @@ export function VariantModal({
     promotionId: initialData?.promotionId ?? "",
     isActive: initialData?.isActive ?? true,
   }));
+
+  useEffect(() => {
+    if (!open) return;
+
+    if (initialData) {
+      setForm({
+        weight: initialData.weight_gram,
+        originalPrice: initialData.originalPrice,
+        stock: initialData.stock,
+        promotionId: initialData.promotionId ?? "",
+        isActive: initialData.isActive,
+      });
+    } else {
+      setForm({
+        weight: 0,
+        originalPrice: 0,
+        stock: 0,
+        promotionId: "",
+        isActive: true,
+      });
+    }
+  }, [open, initialData]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

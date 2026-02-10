@@ -6,7 +6,7 @@ export function mapVariants(variant) {
       variant.typePromotion === "PERCENT"
         ? ((100 - variant.valuePromotion) / 100) * variant.originalPrice
         : variant.typePromotion === "FIXED"
-          ? variant.originalPrice - variant.valuePromotion
+          ? Math.max(variant.originalPrice - variant.valuePromotion, 0)
           : variant.originalPrice,
     promotionType: variant.typePromotion,
     promotionValue: variant.valuePromotion,
