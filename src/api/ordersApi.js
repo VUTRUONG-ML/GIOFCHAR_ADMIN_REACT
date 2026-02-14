@@ -7,7 +7,7 @@ const ordersApi = {
     return axiosClient.get(`/orders/${orderId}/detail`, { signal });
   },
   updateOrderStatus(orderId, statusData) {
-    return axiosClient.put(`/orders/${orderId}/status`, statusData);
+    return axiosClient.patch(`/orders/${orderId}/status`, statusData);
   },
   getOverviewCount(signal) {
     return axiosClient.get("/orders/stats/overviewCount", { signal });

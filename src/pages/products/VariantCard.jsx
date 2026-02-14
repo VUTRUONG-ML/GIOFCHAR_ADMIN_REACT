@@ -1,12 +1,8 @@
 import { formatMoney } from "../../utils/formatMoney";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-
+import { getLabelDiscount } from "../../utils/promotionService";
 export function VariantCard({ variant, onDelete, onUpdate }) {
-  function getLabelDiscount(type, value) {
-    if (type === "FIXED") return formatMoney(value);
-    return `${value}%`;
-  }
   const isInactive = !variant.isActive;
   return (
     <div

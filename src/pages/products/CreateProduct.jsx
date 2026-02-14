@@ -3,10 +3,10 @@ import { InputCreate } from "../../components/InputCreate";
 import { SubTitle } from "../../components/SubTitle";
 import { TextArea } from "../../components/TextArea";
 import { VND } from "../../constants/currency";
-import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { toast } from "react-toastify";
 import categoriesApi from "../../api/categoriesApi";
@@ -217,7 +217,7 @@ export default function CreateProduct() {
 
           {/* ingredients */}
           <div className="my-2">
-            <div className="flex justify-between items-center mb-3">
+            <div className="flex justify-between items-center ">
               <label className="text-sm font-bold text-gray-700">
                 Nguyên liệu sản phẩm
               </label>
