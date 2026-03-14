@@ -3,9 +3,11 @@ import axios from "axios";
 import { navigateTo } from "../utils/navigationService";
 import { authService } from "../utils/authService";
 import { toast } from "react-toastify";
+import { ensureRefreshToken } from "./authApi";
 
 const defaultOptions = {
   baseURL: "http://localhost:8081/api",
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -26,7 +28,7 @@ axiosClient.interceptors.request.use(
 );
 axiosClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (!error.response) {
       throw error;
     }
@@ -40,8 +42,21 @@ axiosClient.interceptors.response.use(
         break;
       case 401:
         console.warn("Unauthorized", message);
-        authService.logout();
-        navigateTo("/auth");
+        if (error.response?.data?.code === "INVALID_ACCESS_TOKEN") {
+          authService.logout();
+          navigateTo("/auth");
+        }
+        if (
+          error.response?.data?.code === "ACCESS_TOKEN_EXPIRED" &&
+          !error.config._retry
+        ) {
+          error.config._retry = true;
+          await ensureRefreshToken();
+          const token = localStorage.getItem("access_token");
+          error.config.headers.Authorization = token ? `Bearer ${token}` : "";
+          return axiosClient(error.config);
+        }
+
         break;
       case 403:
         console.warn("Forbidden", message);
