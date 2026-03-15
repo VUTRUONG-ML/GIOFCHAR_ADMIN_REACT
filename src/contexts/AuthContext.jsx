@@ -11,7 +11,12 @@ export function AuthProvider({ children }) {
     localStorage.setItem("access_token", accessToken);
     setUser(userData);
   };
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await authApi.logout();
+    } catch (error) {
+      console.log(">>> logout error:", error.message);
+    }
     localStorage.removeItem("access_token");
     setUser(null);
   };

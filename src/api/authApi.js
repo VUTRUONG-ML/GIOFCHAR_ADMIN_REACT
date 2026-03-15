@@ -9,6 +9,9 @@ const authApi = {
   refreshToken() {
     return axiosClient.post("/auth/refresh");
   },
+  logout() {
+    return axiosClient.post("/auth/logout");
+  },
 };
 export default authApi;
 
